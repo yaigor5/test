@@ -10,6 +10,7 @@ use CGI::Carp qw(fatalsToBrowser); # Если будет какая-нибудь
 use utf8;
 use Time::localtime; 
 use Data::Dumper;
+use Config::Tiny;
 $|=1; ## запрещаем буферизацию вывода. 
 ###INIT
 
