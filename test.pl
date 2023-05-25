@@ -6,7 +6,7 @@ BEGIN { unshift(@INC, '/var/www/cgi-bin/lib'); }
 use 5.10.1;
 use DBI;
 use CGI;
-use CGI::Carp qw(fatalsToBrowser); # Если будет какая-нибудь ошибка, то выведет в броузер
+use CGI::Carp qw(fatalsToBrowser); # Если будет какая-нибудь ошибка, то выведет в browser
 use utf8;
 use Time::localtime; 
 use Data::Dumper;
