@@ -30,11 +30,28 @@ sub color_print {
     else { $color = 'reset'; }
     print color($color).$message.color('reset')."\n";
 }
-color_print('type'=>'warning', 'message'=>'warning message');
-color_print('type'=>'error', 'message'=>'error message');
-color_print('type'=>'info', 'message'=>'information message');
-color_print('type'=>'debug', 'message'=>'debug message');
+#color_print('type'=>'warning', 'message'=>'warning message');
+#color_print('type'=>'error', 'message'=>'error message');
+#color_print('type'=>'info', 'message'=>'information message');
+#color_print('type'=>'debug', 'message'=>'debug message');
+# список требуемых модулей
+my @required_modules = qw(DBD::mysql Config::IniFiles Mojolicious::Lite);
+eval { # проверка наличия и установка
+    foreach my $module (@required_modules) {
+        eval "use $module";
+        if ($@) {
+            color_print('type'=>'warning', 'message'=>"Модуль $module не установлен. Установка...");
+            CPAN::install($module);
+        }
+    }
+}
 # проверим установку MySql
+my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
+my $dsn = "DBI:mysql:database=" . $config->val('database', 'dbname') . ";host=" . $config->val('database', 'host');
+my $username = $config->val('database', 'username');
+my $password = $config->val('database', 'password');
+my $dbh = DBI->connect($dsn, $username, $password, { mysql_enable_utf8 => 1 }) or die "Не удалось подключиться к базе данных: $DBI::errstr";
+
 
 
 # init процедуры 
