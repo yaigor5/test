@@ -53,8 +53,8 @@ eval {
         my $dbh_root = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port;mysql_socket=$mysql_socket", 'root', '');
         die "Не удалось подключиться к MySQL серверу с пользователем root." unless $dbh_root;
         # cоздание пользователя
-        $dbh_root->do("CREATE USER '$mysql_user'@'$mysql_host' IDENTIFIED BY '$mysql_pass'");
-        $dbh_root->do("GRANT ALL PRIVILEGES ON $mysql_db.* TO '$mysql_user'@'$mysql_host'");
+        $dbh_root->do("CREATE USER '$mysql_user'@'$mysql_host'");
+        $dbh_root->do("GRANT ALL PRIVILEGES ON $mysql_db.* TO '$mysql_user'@'$mysql_host' IDENTIFIED BY '$mysql_pass'");
         # повторно проверка доступности MySQL
         $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port;mysql_socket=$mysql_socket", $mysql_user, $mysql_pass);
         die "Не удалось подключиться к MySQL серверу после установки и настройки." unless $dbh;
