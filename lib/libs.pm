@@ -5,15 +5,31 @@ our $CREATED_DATE = '2023-05-26';
 
 use strict;
 use warnings;
+use DBI;
+use Config::IniFiles;
 
-sub add {
-    my ($a, $b) = @_;
-    return $a + $b;
+
+sub connect_to_database {
+    my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
+    my $mysql_host = $config->val('database', 'host');
+    my $mysql_port = $config->val('database', 'port');
+    my $mysql_socket = $config->val('database', 'socket');
+    my $mysql_user = $config->val('database', 'username');
+    my $mysql_pass = $config->val('database', 'password');
+    my $mysql_db = $config->val('database', 'dbname');
+    #my ($mysql_host, mysql_port, $mysql_socket, $mysql_db, $mysql_user, $mysql_pass) = @_;
+    $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port;mysql_socket=$mysql_socket;database=$mysql_db", $mysql_user, $mysql_pass);
+    die "Не удалось подключиться к базе данных: $DBI::errstr" unless $dbh;
+    return $dbh;
 }
 
-sub subtract {
-    my ($a, $b) = @_;
-    return $a - $b;
-}
+
+
+
+
+
+
+
+
 
 1;
