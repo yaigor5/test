@@ -16,11 +16,11 @@ unless (check_curl_installed()) {
 eval "use Term::ANSIColor";
 if ($@) {
     print "Модуль Term::ANSIColor не установлен. Установка...\n";
-    CPAN::install(Term::ANSIColor);
+    CPAN::install('Term::ANSIColor');
 } else { print "Term::ANSIColor уже установлен.\n"; }
 sub color_print {
-	my %args = (@_);
-	my $type = $args{type};
+    my %args = (@_);
+    my $type = $args{type};
     my $message = $args{message};
     my $color;
     if ($type eq 'info') { $color = 'green'; } 
@@ -30,10 +30,10 @@ sub color_print {
     else { $color = 'reset'; }
     print color($color).$message.color('reset')."\n";
 }
-#color_print('warning', 'warning message');
-#color_print('error', 'error message');
-#color_print('info', 'information message');
-#color_print('debug', 'debug message');
+color_print('type'=>'warning', 'message'=>'warning message');
+color_print('type'=>'error', 'message'=>'error message');
+color_print('type'=>'info', 'message'=>'information message');
+color_print('type'=>'debug', 'message'=>'debug message');
 # проверим установку MySql
 
 
