@@ -12,7 +12,7 @@ unless (check_curl_installed()) {
     print "curl не установлен. Установка curl...\n";
     install_curl();
 } else {  print "curl уже установлен.\n"; }
-# включим цветность
+# включим цветность ------------------------------------
 eval "use Term::ANSIColor";
 if ($@) {
     print "Модуль Term::ANSIColor не установлен. Установка...\n";
