@@ -122,7 +122,7 @@ sub color_print {
     print color($color).$message.color('reset')."\n";
 }
 sub install_mysql { # MySQL - colored
-    my cmd = get_package_manager();
+    my $cmd = get_package_manager();
     my $command = $cmd." update > /dev/null && ".$cmd." install -y mysql-server > /dev/null";
     system($command);
     # успешность установки
