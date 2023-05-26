@@ -23,6 +23,7 @@ eval {
     my @required_modules = qw(Config::IniFiles Mojolicious::Lite);
     eval { # проверка наличия и установка
         foreach my $module (@required_modules) {
+            color_print('type'=>'debug', 'message'=>"Модуль $module");
             eval "use $module";
             if ($@) {
                 color_print('type'=>'warning', 'message'=>"Модуль $module не установлен. Установка...");
