@@ -20,7 +20,7 @@ if ($@) {
 } else { print "Term::ANSIColor уже установлен.\n"; }
 eval {
     # список требуемых модулей
-    my @required_modules = qw(DBD::mysql Config::IniFiles Mojolicious::Lite);
+    my @required_modules = qw(Config::IniFiles Mojolicious::Lite);
     eval { # проверка наличия и установка
         foreach my $module (@required_modules) {
             eval "use $module";
@@ -31,7 +31,7 @@ eval {
         }
     }
     # проверка доступности MySQL сервера
-    use Config::IniFiles;
+    eval "use Config::IniFiles";
     use DBI;
     my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
     my $mysql_host = $config->val('database', 'host');
