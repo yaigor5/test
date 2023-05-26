@@ -34,7 +34,7 @@ eval {
     # проверка доступности MySQL сервера
     #eval "use Config::IniFiles";
     #eval "use DBI";
-    my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
+    #my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
     my $mysql_host = $config->val('database', 'host');
     my $mysql_port = $config->val('database', 'port');
     my $mysql_socket = $config->val('database', 'socket');
