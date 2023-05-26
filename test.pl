@@ -12,14 +12,10 @@ use utf8;
 #use Data::Dumper;
 #use Config::Tiny;
 
-
-
 $|=1; ## запрещаем буферизацию вывода. 
 
-###INIT
-our $VERSION = '2023-05-26';
 
-
+#
 print "Content-type: text/html\n\n";
 
 print "Модуль libs, версия: $libs::VERSION<br>\n";
