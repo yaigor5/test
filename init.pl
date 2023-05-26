@@ -30,6 +30,11 @@ eval {
         color_print('type'=>'warning', 'message'=>"Модуль DBI не установлен. Установка...");
         CPAN::install('DBI');
     }
+    eval "use DBD::mysql";
+    if ($@) {
+        color_print('type'=>'warning', 'message'=>"Модуль DBD::mysql не установлен. Установка...");
+        CPAN::install("DBD::mysql");
+    }
     my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
     my $mysql_host = $config->val('database', 'host');
     my $mysql_port = $config->val('database', 'port');
@@ -45,7 +50,6 @@ eval {
     # при недоступности - установка и настройка
     if ($@ || !$dbh) {
         color_print('type'=>'warning', 'message'=>"Не удалось подключиться к MySQL серверу. Установка и настройка...");
-        CPAN::install("DBD::mysql");
         # установка MySQL
         install_mysql();
         # настройка MySQL
