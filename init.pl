@@ -49,7 +49,7 @@ eval {
         # установка MySQL
         install_mysql();
         # настройка MySQL
-        system("sudo mysql -e 'ALTER USER \"root\"@\"localhost\" IDENTIFIED WITH mysql_native_password BY \"\"; FLUSH PRIVILEGES;' > /dev/null");
+        #system("sudo mysql -e 'ALTER USER \"root\"@\"localhost\" IDENTIFIED WITH mysql_native_password BY \"\"; FLUSH PRIVILEGES;'");
         my $dbh_root = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port;mysql_socket=$mysql_socket", 'root', '');
         die "Не удалось подключиться к MySQL серверу с пользователем root." unless $dbh_root;
         # cоздание пользователя
