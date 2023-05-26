@@ -51,13 +51,13 @@ eval {
         # настройка MySQL
         system("sudo mysql -e 'ALTER USER \"root\"@\"localhost\" IDENTIFIED WITH mysql_native_password BY \"\"; FLUSH PRIVILEGES;' > /dev/null");
         my $dbh_root = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port;mysql_socket=$mysql_socket", 'root', '');
-        die "Не удалось подключиться к MySQL серверу с пользователем root" unless $dbh_root;
+        die "Не удалось подключиться к MySQL серверу с пользователем root." unless $dbh_root;
         # cоздание пользователя
         $dbh_root->do("CREATE USER '$mysql_user'@'$mysql_host' IDENTIFIED BY '$mysql_pass'");
         $dbh_root->do("GRANT ALL PRIVILEGES ON $mysql_db.* TO '$mysql_user'@'$mysql_host'");
         # повторно проверка доступности MySQL
         $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port;mysql_socket=$mysql_socket", $mysql_user, $mysql_pass);
-        die "Не удалось подключиться к MySQL серверу после установки и настройки:" unless $dbh;
+        die "Не удалось подключиться к MySQL серверу после установки и настройки." unless $dbh;
     }
     # проверка наличия DB
     my $query = "SHOW DATABASES LIKE ?";
@@ -118,9 +118,9 @@ sub color_print {
     else { $color = 'reset'; }
     print color($color).$message.color('reset')."\n";
 }
-sub install_mysql { # MySQL - colored
+sub install_mysql { # MariaDB - colored
     my $cmd = get_package_manager();
-    my $command = $cmd." update > /dev/null && ".$cmd." install -y mysql-server > /dev/null";
+    my $command = $cmd." update > /dev/null && ".$cmd." install -y mariadb-server > /dev/null";
     system($command);
     # успешность установки
     if ($? == 0) {
