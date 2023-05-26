@@ -10,7 +10,7 @@ use CGI;
 use CGI::Carp qw(fatalsToBrowser); # Если будет какая-нибудь ошибка, то выведет в browser
 use utf8;
 #use Data::Dumper;
-use Config::Tiny;
+#use Config::Tiny;
 
 
 
