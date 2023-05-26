@@ -32,9 +32,17 @@ eval {
         }
     }
     # проверка доступности MySQL сервера
-    #eval "use Config::IniFiles";
-    #eval "use DBI";
-    #my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
+    eval "use Config::IniFiles";
+    if ($@) {
+        color_print('type'=>'warning', 'message'=>"Модуль Config::IniFiles не установлен. Установка...");
+        CPAN::install('Config::IniFiles');
+    }
+    eval "use DBI";
+    if ($@) {
+        color_print('type'=>'warning', 'message'=>"Модуль DBI не установлен. Установка...");
+        CPAN::install('DBI');
+    }
+    my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
     my $mysql_host = $config->val('database', 'host');
     my $mysql_port = $config->val('database', 'port');
     my $mysql_socket = $config->val('database', 'socket');
