@@ -46,6 +46,8 @@ eval { # проверка наличия и установка
     }
 }
 # проверим установку MySql
+use Config::IniFiles;
+use DBI;
 my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
 my $dsn = "DBI:mysql:database=" . $config->val('database', 'dbname') . ";host=" . $config->val('database', 'host');
 my $username = $config->val('database', 'username');
