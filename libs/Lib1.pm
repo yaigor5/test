@@ -19,7 +19,7 @@ use DBI;
 use Config::IniFiles;
 use Text::ParseWords;
 use DateTime::Format::MySQL;
-use DATA::Dumper;
+use Data::Dumper;
 
 # процедура для подключения к БД
 sub connect_to_database {
