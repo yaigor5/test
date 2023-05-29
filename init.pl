@@ -23,21 +23,25 @@ if ($@) {
     color_print('type'=>'warning', 'message'=>"Модуль App::Colorist не установлен. Установка...");
     CPAN::install('App::Colorist');
 }
-eval "use Config::IniFiles";
-if ($@) {
-    color_print('type'=>'warning', 'message'=>"Модуль Config::IniFiles не установлен. Установка...");
-    CPAN::install('Config::IniFiles');
+
+if (0) {
+    eval "use Config::IniFiles";
+    if ($@) {
+        color_print('type'=>'warning', 'message'=>"Модуль Config::IniFiles не установлен. Установка...");
+        CPAN::install('Config::IniFiles');
+    }
+    eval "use DBI";
+    if ($@) {
+        color_print('type'=>'warning', 'message'=>"Модуль DBI не установлен. Установка...");
+        CPAN::install('DBI');
+    }
+    eval "use DBD::mysql";
+    if ($@) {
+        color_print('type'=>'warning', 'message'=>"Модуль DBD::mysql не установлен. Установка...");
+        CPAN::install("DBD::mysql");
+    }
 }
-eval "use DBI";
-if ($@) {
-    color_print('type'=>'warning', 'message'=>"Модуль DBI не установлен. Установка...");
-    CPAN::install('DBI');
-}
-eval "use DBD::mysql";
-if ($@) {
-    color_print('type'=>'warning', 'message'=>"Модуль DBD::mysql не установлен. Установка...");
-    CPAN::install("DBD::mysql");
-}
+
 # установка зависимостей из cpanfile
 install_dependencies();
 if ($? != 0) { 
