@@ -69,7 +69,7 @@ sub create_table {
 # основная процедура для проверка и создание структуры таблиц
 sub check_and_prepare_sql_structure {
     # структура таблицы 'log'
-    $schema_log = "
+    my $schema_log = "
     CREATE TABLE IF NOT EXISTS `log` (
     `created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     `int_id` char(16) NOT NULL,
@@ -80,7 +80,7 @@ sub check_and_prepare_sql_structure {
     ";
     
     # структура таблицы 'message'
-    $schema_message = "
+    my $schema_message = "
     CREATE TABLE IF NOT EXISTS `message` (
     `created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     `id` varchar(255) NOT NULL,
