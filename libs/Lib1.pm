@@ -142,7 +142,7 @@ sub log_line_parser {
         $log_data{flag}=$fields[3];
         
         ## debug
-        print "FLAG='".$log_data{flag}."'\n";
+        #print "FLAG='".$log_data{flag}."'\n";
 
         if ($log_data{flag} eq '<=') { # прибытие сообщения (в этом случае за флагом следует адрес отправителя)
             #$log_data{from}=$fields[4]; # адрес отправителя - нигде не используется
@@ -166,7 +166,7 @@ sub log_line_parser {
     }
 
     ## debug
-    print "TABLE='".$log_data{tbl}."' --> ".$log_data{str}."\n";
+    #print "TABLE='".$log_data{tbl}."' --> ".$log_data{str}."\n";
 
 
     # В таблицу 'message' должны попасть только строки прибытия сообщения (с флагом '<='').
@@ -206,6 +206,8 @@ sub log_parser {
     while (my $line = <$fh>) {
         chomp($line);
         log_line_parser($dbh,$line,\$message_insert_sth,\$log_insert_sth);
+        ## debug
+        print $message_insert_sth."\n" if $message_insert_sth;
     }
 
     # закрытие соединений
