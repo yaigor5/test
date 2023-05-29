@@ -79,7 +79,7 @@ sub check_and_prepare_sql_structure {
     CREATE TABLE IF NOT EXISTS `log` (
     `created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     `int_id` char(16) NOT NULL,
-    `str` varchar(255) DEFAULT NULL,
+    `str` text DEFAULT NULL,
     `address` varchar(255) DEFAULT NULL,
     KEY `log_address_idx` (`address`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -91,7 +91,7 @@ sub check_and_prepare_sql_structure {
     `created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
     `id` varchar(255) NOT NULL,
     `int_id` char(16) NOT NULL,
-    `str` varchar(255) NOT NULL,
+    `str` text NOT NULL,
     `status` tinyint(1) DEFAULT NULL,
     PRIMARY KEY (`id`),
     KEY `message_created_idx` (`created`),
