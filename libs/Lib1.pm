@@ -107,7 +107,7 @@ sub check_and_prepare_sql_structure {
 ## TODO - bootstrap view
 # под-процедура для построчного распарсивания и записи в БД
 sub log_line_parser {
-    my ($dbh, $log_line) = @_;
+    my ($dbh, $log_line, $message_insert_sth, $log_insert_sth) = @_;
 
     # парсинг строки
     my @fields = parse_line(' ', 0, $log_line);
@@ -159,9 +159,9 @@ sub log_line_parser {
 
     # распределение хэша в БД
     if ($log_data{tbl} eq 'message') {
-        $message_insert_sth->execute($log_data{created}, $log_data{int_id}, $log_data{str}, $log_data{id});
+        $$message_insert_sth->execute($log_data{created}, $log_data{int_id}, $log_data{str}, $log_data{id});
     } else {
-        $log_insert_sth->execute($log_data{created}, $log_data{int_id}, $log_data{str}, $log_data{to});
+        $$log_insert_sth->execute($log_data{created}, $log_data{int_id}, $log_data{str}, $log_data{to});
     }
 
 }
@@ -190,7 +190,7 @@ sub log_parser {
     # чтение файла лога и обработка построчно
     while (my $line = <$fh>) {
         chomp($line);
-        log_line_parser($dbh,$line);
+        log_line_parser($dbh,$line,\$message_insert_sth,\$log_insert_sth);
     }
 
     # закрытие соединений
