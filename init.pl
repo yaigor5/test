@@ -19,10 +19,6 @@ if ($@) {
     CPAN::install('Term::ANSIColor');
 } else { print "Term::ANSIColor уже установлен.\n"; }
 eval "use App::Colorist";
-if ($@) {
-    color_print('type'=>'warning', 'message'=>"Модуль App::Colorist не установлен. Установка...");
-    CPAN::install('App::Colorist');
-}
 
 if (0) {
     eval "use Config::IniFiles";
@@ -105,7 +101,7 @@ sub check_cpanm { # cpanm - проверка наличия
     return $cpanm_installed;
 }
 sub install_dependencies { # установка зависимостей из cpanfile (в текущем каталоге)
-    system('colorist -E cpanm --installdeps .');
+    system('cpanm --installdeps .');
 }
 sub check_curl_installed { # curl
     my $output = `curl --version 2>&1`;
