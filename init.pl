@@ -18,69 +18,67 @@ if ($@) {
     print "Модуль Term::ANSIColor не установлен. Установка...\n";
     CPAN::install('Term::ANSIColor');
 } else { print "Term::ANSIColor уже установлен.\n"; }
-#eval {
-    # проверка доступности MySQL сервера
-    eval "use Config::IniFiles";
-    if ($@) {
-        color_print('type'=>'warning', 'message'=>"Модуль Config::IniFiles не установлен. Установка...");
-        CPAN::install('Config::IniFiles');
-    }
-    eval "use DBI";
-    if ($@) {
-        color_print('type'=>'warning', 'message'=>"Модуль DBI не установлен. Установка...");
-        CPAN::install('DBI');
-    }
-    eval "use DBD::mysql";
-    if ($@) {
-        color_print('type'=>'warning', 'message'=>"Модуль DBD::mysql не установлен. Установка...");
-        CPAN::install("DBD::mysql");
-    }
-    # установка зависимостей из cpanfile
-    install_dependencies();
-    if ($? != 0) { 
-        color_print('type'=>'warning', 'message'=>"Ошибка установки зависимостей."); 
-        exit;  
-    } else { color_print('type'=>'info', 'message'=>"Установка зависимостей Perl завершена."); }
-    # считываем конфиг для подключения к БД
-    my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
-    my $mysql_host = $config->val('database', 'host');
-    my $mysql_port = $config->val('database', 'port');
-    my $mysql_user = $config->val('database', 'username');
-    my $mysql_pass = $config->val('database', 'password');
-    my $mysql_db = $config->val('database', 'dbname');
-    my $dbh;
-    # пробное подключение к MySQL
-    eval {
-        $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port", $mysql_user, $mysql_pass);
-    };
-    # при недоступности - установка и настройка
-    if ($@ || !$dbh) {
-        color_print('type'=>'warning', 'message'=>"Не удалось подключиться к MySQL серверу. Установка и настройка...");
-        # установка MySQL
-        install_mysql();
-        # настройка MySQL
-        #system("sudo mysql -e 'ALTER USER \"root\"@\"localhost\" IDENTIFIED WITH mysql_native_password BY \"\"; FLUSH PRIVILEGES;'");
-        my $dbh_root = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port", 'root', '');
-        die "Не удалось подключиться к MySQL серверу с пользователем root." unless $dbh_root;
-        # cоздание пользователя
-        print "CREATE USER '$mysql_user'\@'$mysql_host'\n";
-        print "GRANT ALL PRIVILEGES ON $mysql_db.* TO '$mysql_user'\@'$mysql_host' IDENTIFIED BY '$mysql_pass'\n";
-        $dbh_root->do("CREATE USER '$mysql_user'\@'$mysql_host'");
-        $dbh_root->do("GRANT ALL PRIVILEGES ON $mysql_db.* TO '$mysql_user'\@'$mysql_host' IDENTIFIED BY '$mysql_pass'");
-        # повторно проверка доступности MySQL
-        $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port", $mysql_user, $mysql_pass);
-        die "Не удалось подключиться к MySQL серверу после установки и настройки." unless $dbh;
-    }
-    # проверка наличия DB
-    my $query = "SHOW DATABASES LIKE ?";
-    my $sth = $dbh->prepare($query);
-    $sth->execute($mysql_db);
-    my $result = $sth->fetchrow_array;
-    # если DB отсутствует, то создаем ёё
-    unless ($result) { $dbh->do("CREATE DATABASE $mysql_db"); }
-    #--------------------------------------------------------------------------
-    color_print('type'=>'info', 'message'=>"Приготовление к работе выполнено.");
-#};
+# проверка доступности MySQL сервера
+eval "use Config::IniFiles";
+if ($@) {
+    color_print('type'=>'warning', 'message'=>"Модуль Config::IniFiles не установлен. Установка...");
+    CPAN::install('Config::IniFiles');
+}
+eval "use DBI";
+if ($@) {
+    color_print('type'=>'warning', 'message'=>"Модуль DBI не установлен. Установка...");
+    CPAN::install('DBI');
+}
+eval "use DBD::mysql";
+if ($@) {
+    color_print('type'=>'warning', 'message'=>"Модуль DBD::mysql не установлен. Установка...");
+    CPAN::install("DBD::mysql");
+}
+# установка зависимостей из cpanfile
+install_dependencies();
+if ($? != 0) { 
+    color_print('type'=>'warning', 'message'=>"Ошибка установки зависимостей."); 
+    exit;  
+} else { color_print('type'=>'info', 'message'=>"Установка зависимостей Perl завершена."); }
+# считываем конфиг для подключения к БД
+my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
+my $mysql_host = $config->val('database', 'host');
+my $mysql_port = $config->val('database', 'port');
+my $mysql_user = $config->val('database', 'username');
+my $mysql_pass = $config->val('database', 'password');
+my $mysql_db = $config->val('database', 'dbname');
+my $dbh;
+# пробное подключение к MySQL
+eval {
+    $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port", $mysql_user, $mysql_pass);
+};
+# при недоступности - установка и настройка
+if ($@ || !$dbh) {
+    color_print('type'=>'warning', 'message'=>"Не удалось подключиться к MySQL серверу. Установка и настройка...");
+    # установка MySQL
+    install_mysql();
+    # настройка MySQL
+    #system("sudo mysql -e 'ALTER USER \"root\"@\"localhost\" IDENTIFIED WITH mysql_native_password BY \"\"; FLUSH PRIVILEGES;'");
+    my $dbh_root = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port", 'root', '');
+    die "Не удалось подключиться к MySQL серверу с пользователем root." unless $dbh_root;
+    # cоздание пользователя
+    print "CREATE USER '$mysql_user'\@'$mysql_host'\n";
+    print "GRANT ALL PRIVILEGES ON $mysql_db.* TO '$mysql_user'\@'$mysql_host' IDENTIFIED BY '$mysql_pass'\n";
+    $dbh_root->do("CREATE USER '$mysql_user'\@'$mysql_host'");
+    $dbh_root->do("GRANT ALL PRIVILEGES ON $mysql_db.* TO '$mysql_user'\@'$mysql_host' IDENTIFIED BY '$mysql_pass'");
+    # повторно проверка доступности MySQL
+    $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port", $mysql_user, $mysql_pass);
+    die "Не удалось подключиться к MySQL серверу после установки и настройки." unless $dbh;
+}
+# проверка наличия DB
+my $query = "SHOW DATABASES LIKE ?";
+my $sth = $dbh->prepare($query);
+$sth->execute($mysql_db);
+my $result = $sth->fetchrow_array;
+# если DB отсутствует, то создаем ёё
+unless ($result) { $dbh->do("CREATE DATABASE $mysql_db"); }
+#--------------------------------------------------------------------------
+color_print('type'=>'info', 'message'=>"Приготовление к работе выполнено.");
 
 # init процедуры 
 sub install_cpan { # CPAN
@@ -99,7 +97,7 @@ sub check_cpanm { # cpanm - проверка наличия
     return $cpanm_installed;
 }
 sub install_dependencies { # установка зависимостей из cpanfile (в текущем каталоге)
-    system('cpanm --installdeps .');
+    system('colorist -E cpanm --installdeps .');
 }
 sub check_curl_installed { # curl
     my $output = `curl --version 2>&1`;
