@@ -41,6 +41,11 @@ if ($@) {
         color_print('type'=>'warning', 'message'=>"Модуль App::cpanminus не установлен. Установка...");
         CPAN::install("App::cpanminus");
     }
+    eval "use App::cpanminus::script";
+    if ($@) {
+        color_print('type'=>'warning', 'message'=>"Модуль App::cpanminus::script не установлен. Установка...");
+        CPAN::install("App::cpanminus::script");
+    }
     # установка
     install_dependencies();
     if ($? != 0) { 
@@ -105,8 +110,7 @@ sub check_cpanm { # cpanm - проверка наличия
     return $cpanm_installed;
 }
 sub install_dependencies { # установка зависимостей из cpanfile
-    my $cpanm = App::cpanminus->new;
-    $cpanm->install('--installdeps', '.');
+    App::cpanminus::script->run('--installdeps', '.');
 }
 sub check_curl_installed { # curl
     my $output = `curl --version 2>&1`;
