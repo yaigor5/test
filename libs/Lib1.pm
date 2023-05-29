@@ -158,7 +158,10 @@ sub log_line_parser {
             }
             ## debug
             print "ID='".$log_data{id}."'\n";
-            if (!$log_data{id}) { exit; }
+            if (!$log_data{id}) { 
+                print $log_line;
+                exit; 
+            }
 
             #if ($log_data{str} =~ /\sid=(\S+)\s/) { # поиск значения id=xxxx - только для входящих - определено условием
             #    $log_data{id} = $1; # = значение поля id=xxxx из строки лога
