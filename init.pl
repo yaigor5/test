@@ -35,18 +35,7 @@ if ($@) {
         color_print('type'=>'warning', 'message'=>"Модуль DBD::mysql не установлен. Установка...");
         CPAN::install("DBD::mysql");
     }
-    # дополнительно проверка и установка зависимостей из cpanfile
-    eval "use App::cpanminus";
-    if ($@) {
-        color_print('type'=>'warning', 'message'=>"Модуль App::cpanminus не установлен. Установка...");
-        CPAN::install("App::cpanminus");
-    }
-    eval "use App::cpanminus::script";
-    if ($@) {
-        color_print('type'=>'warning', 'message'=>"Модуль App::cpanminus::script не установлен. Установка...");
-        CPAN::install("App::cpanminus::script");
-    }
-    # установка
+    # установка зависимостей из cpanfile
     install_dependencies();
     if ($? != 0) { 
         color_print('type'=>'warning', 'message'=>"Ошибка установки зависимостей."); 
@@ -109,15 +98,12 @@ sub check_cpanm { # cpanm - проверка наличия
     chomp $cpanm_installed;
     return $cpanm_installed;
 }
-sub install_dependencies { # установка зависимостей из cpanfile
-    App::cpanminus::script->run('--installdeps', '.');
+sub install_dependencies { # установка зависимостей из cpanfile (в текущем каталоге)
+    system('cpanm --installdeps .');
 }
 sub check_curl_installed { # curl
     my $output = `curl --version 2>&1`;
     return ($output =~ /curl (\d+)/);
-}
-sub install_dependencies_os { # установка зависимостей
-    system('curl -L https://cpanmin.us | perl - App::cpanminus');
 }
 sub install_curl { # curl
     my $command = get_package_manager()." install -y curl";
