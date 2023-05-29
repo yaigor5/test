@@ -7,7 +7,7 @@ $|=1; ## запрещаем буферизацию вывода
 use utf8;
 use Mojolicious::Lite;
 # db init
-my $dbh=libs::connect_to_database();
+#my $dbh=libs::connect_to_database();
 
 
 get '/' => sub {
