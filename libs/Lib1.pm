@@ -147,15 +147,18 @@ sub log_line_parser {
         if ($log_data{flag} eq '<=') { # прибытие сообщения (в этом случае за флагом следует адрес отправителя)
             #$log_data{from}=$fields[4]; # адрес отправителя - нигде не используется
             
-            for (@fields) {
+            for (@fields) { # поиск значения id=xxxx - только для входящих - определено условием
                 if ($_=~/^id=(.*)$/) { 
-                    $log_data{id} = $1; 
+                    $log_data{id} = $1; # = значение поля id=xxxx из строки лога
 
                     ## debug
                     print "ID='".$log_data{id}."'\n";
 
                 }
             }
+            ## debug
+            print "ID='".$log_data{id}."'\n";
+            if (!$log_data{id}) { exit; }
 
             #if ($log_data{str} =~ /\sid=(\S+)\s/) { # поиск значения id=xxxx - только для входящих - определено условием
             #    $log_data{id} = $1; # = значение поля id=xxxx из строки лога
@@ -204,6 +207,9 @@ sub log_parser {
         print "Уже считывали данные из лог файла\n";
         return; 
     }
+
+    ## debug
+    print "##################### done='".$config->val('flag', 'done')."'\n";
 
     my $dbh=connect_to_database();
 
