@@ -116,12 +116,15 @@ sub check_and_prepare_sql_structure {
 sub log_line_parser {
     my ($dbh, $log_line, $message_insert_sth, $log_insert_sth) = @_;
 
+    # экранирование '
+    $log_line = quotmeta($log_line);
+
     # парсинг строки
     my @fields = parse_line(' ', 0, $log_line);
 
     # обработка явных некорректностей
     if (! defined $fields[0] || ! defined $fields[1]) {
-        print "В этой строке лога некорректный формат - проблема с timestamp:\n$log_line\n\n\n##########\n\n\n";
+        print "В этой строке лога некорректный формат - проблема с timestamp:\n$log_line\n";
         ## debug
         for (@fields) { print "'".$_."'\n"; }
         exit;
@@ -172,6 +175,9 @@ sub log_line_parser {
 
     # В таблицу 'message' должны попасть только строки прибытия сообщения (с флагом '<='').
     # В таблицу 'log' записываются все остальные строки - таким образом по условию исключаются сообщения прибытия из 'log'
+
+    # возврат '
+    $log_line = eval "qq($log_line)";
 
     # распределение хэша в БД
     if ($log_data{tbl} eq 'message') {
