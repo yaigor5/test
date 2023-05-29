@@ -18,15 +18,18 @@ use warnings;
 use DBI;
 use Config::IniFiles;
 use Text::ParseWords;
+use DateTime::Format::MySQL;
 
 # процедура для подключения к БД
 sub connect_to_database {
+    # считывание конфига
     my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
     my $mysql_host = $config->val('database', 'host');
     my $mysql_port = $config->val('database', 'port');
     my $mysql_user = $config->val('database', 'username');
     my $mysql_pass = $config->val('database', 'password');
     my $mysql_db = $config->val('database', 'dbname');
+    # дескриптор
     my $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port;database=$mysql_db", $mysql_user, $mysql_pass);
     die "Не удалось подключиться к базе данных: $DBI::errstr" unless $dbh;
     return $dbh;
@@ -101,23 +104,103 @@ sub check_and_prepare_sql_structure {
     disconnect_from_database($dbh);
 }
 
-# под-процедура для построчного распарсивания
+## TODO - bootstrap view
+# под-процедура для построчного распарсивания и записи в БД
 sub log_line_parser {
-    #my ($dbh, $log_line) = @_;
+    my ($dbh, $log_line) = @_;
 
-    my $log_line = '2012-02-13 14:39:22 1RwtJa-000AFB-07 => :blackhole: <tpxmuwr@somehost.ru> R=blackhole_router';
+    # парсинг строки
     my @fields = parse_line(' ', 0, $log_line);
 
-    # создание именного хэша
-    my %log_data;
-    $log_data{created} = "$fields[0] $fields[1]";
-    $log_data{int_id} = $fields[2];
-    $log_data{str} = join(' ', @fields[3..$#fields]);
+    # обработка явных некорректностей
+    if (!$fields[0] || $fields[0]!~/^\d{4}\-\d{2}\-\d{2}/) {
+        print "В этой строке лога некорректный формат - проблема с timestamp.\n";
+        return;
+    }
+    if (!$fields[2]) {
+        print "В этой строке лога некорректный формат - нет внутреннего id.\n";
+        return;
+    }
 
-    # поиск значения id=xxx
-    if ($log_data{str} =~ /id=(\S+)/) {
-        $log_data{id} = $1;
-    }    
+    # создание хэша
+    my %log_data;
+    my $dt=DateTime::Format::MySQL->parse_datetime("$fields[0] $fields[1]");
+    $log_data{created} = DateTime::Format::MySQL->format_datetime($dt); # = timestamp строки лога
+    $log_data{int_id} = $fields[2]; # = внутренний id сообщения
+    $log_data{str} = join(' ', @fields[2..$#fields]); # = строка лога (без временной метки)
+    $log_data{tbl}='log'; # - определено условием
+
+    # обработка флага в строке
+    if (defined $fields[3]) { # есть флаг
+        $log_data{flag}=chomp($fields[3]);
+        if ($log_data{flag} eq '<=') { # прибытие сообщения (в этом случае за флагом следует адрес отправителя)
+            #$log_data{from}=$fields[4]; # адрес отправителя - нигде не используется
+            if ($log_data{str} =~ /\sid=(\S+)\s/) { # поиск значения id=xxxx - только для входящих - определено условием
+                $log_data{id} = $1; # = значение поля id=xxxx из строки лога
+            } 
+            $log_data{tbl}='message'; # into message table - определено условием
+        } elsif ($log_data{flag} eq '=>') { # нормальная доставка сообщения
+            $log_data{to}=$fields[4]; # адрес получателя
+        } elsif ($log_data{flag} eq '->') { # дополнительный адрес в той же доставке
+            $log_data{to}=$fields[4]; # адрес получателя
+        } elsif ($log_data{flag} eq '**') { # доставка не удалась
+            $log_data{to}=$fields[4]; # адрес получателя
+        } elsif ($log_data{flag} eq '==') { # доставка задержана (временная проблема)
+            $log_data{to}=$fields[4]; # адрес получателя
+        } else { # В случаях, когда в лог пишется общая информация, флаг и адрес получателя не указываются
+            ##print "В этой строке лога общая информация.\n";
+        }
+    } else { 
+        print "В этой строке лога неполный формат - нет данных.\n";
+    }
+
+    # В таблицу 'message' должны попасть только строки прибытия сообщения (с флагом '<='').
+    # В таблицу 'log' записываются все остальные строки - таким образом по условию исключаются сообщения прибытия из 'log'
+
+    # распределение хэша в БД
+    if ($log_data{tbl} eq 'message') {
+        $message_insert_sth->execute($log_data{created}, $log_data{int_id}, $log_data{str}, $log_data{id});
+    } else {
+        $log_insert_sth->execute($log_data{created}, $log_data{int_id}, $log_data{str}, $log_data{to});
+    }
+
+}
+
+## TODO - bootstrap view
+# основная процедура для парсинга лога
+sub log_parser {
+    # считывание конфига
+    my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
+    my $log_file=$config->val('log', 'path')."/".$config->val('log', 'filename');
+
+    if ($log_file=$config->val('flag', 'done')) { 
+        print "Уже считывали данные из лог файла\n";
+        return; 
+    }
+
+    my $dbh=connect_to_database();
+
+    # Подготовка SQL-запросов для вставки данных в таблицы
+    my $message_insert_sth = $dbh->prepare('INSERT INTO `message` (`created`, `int_id`, `str`, `id`) VALUES (?, ?, ?, ?)');
+    my $log_insert_sth = $dbh->prepare('INSERT INTO `log` (`created`, `int_id`, `str`, `address`) VALUES (?, ?, ?, ?)');
+
+    # открытие файла лога
+    open(my $fh, '<', $log_file) or die "Can't open $log_file: $!";
+
+    # чтение файла лога и обработка построчно
+    while (my $line = <$fh>) {
+        chomp($line);
+        log_line_parser($dbh,$line);
+    }
+
+    # закрытие соединений
+    close($fh);
+    $dbh->disconnect();
+
+    # сохранение флага в конфиге
+    $config->setval('flag', 'done', '1');
+    $config->RewriteConfig();
+
 }
 
 

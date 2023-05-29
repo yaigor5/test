@@ -13,8 +13,8 @@ $|=1; ## запрещаем буферизацию вывода
 my $dbh=Lib1::connect_to_database();
 ## обеспечиваем структуру таблиц
 Lib1::check_and_prepare_sql_structure();
-
 ## Парсер - разовый запуск при отсутствии ротации лога
+Lib1::log_parser();
 
 
 ## Вьюшка
@@ -47,16 +47,16 @@ __DATA__
 </head>
 <body>
     <% if (stash('results')) { %>
-        <table>
+        <table style='border: 1;'>
             <thead>
                 <tr>
-                    <th>id</th><th>str</th>
+                    <th>created</th><th>int_id</th><th>str</th>
                 </tr>
             </thead>
             <tbody>
                 <% foreach my $row (@{stash('results')}) { %>
                     <tr>
-                        <td><%= $row->{id} %></td><td><%= $row->{str} %></td>
+                        <td><%= $row->{created} %></td><td><%= $row->{int_id} %></td><td><%= $row->{str} %></td>
                     </tr>
                 <% } %>
             </tbody>

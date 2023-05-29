@@ -44,6 +44,7 @@ CREATE INDEX log_address_idx ON log USING hash (address);
 * __->__ дополнительный адрес в той же доставке
 * __**__ доставка не удалась
 * __==__ доставка задержана (временная проблема)
+
 В случаях, когда в лог пишется общая информация, флаг и адрес получателя не указываются.
 
 <u>_Задачи:_</u>
@@ -88,7 +89,9 @@ ___
 
 ### Реализация:
 - [x] Входные данные отдельно от кода
-    - [x] конфиг для ~~коннектора~~ дескриптора к БД (config.ini)
+    - [x] конфиг для дескриптора к БД ([database] config.ini)
+    - [x] конфиг для входных данных про лог файл ([log] config.ini)
+    - [x] флаг для одноразового парсинга лог файла - заносится после запуска ([flag] config.ini)
 - [ ] Выбор основных модулей для ~~проекта~~ конкретной задачи
     - [x] основной скелет - [Mojolicious::Lite](https://metacpan.org/pod/Mojolicious::Lite "на metacpan.org")
     - [x] считывание конфига - Config::IniFile
@@ -110,7 +113,7 @@ ___
     - [ ] документирование процедур **libs/Lib1.pm**
     - [ ] тестирование основного тела **test.pl**
 
-### Схема таблиц для MariaDB
+### Схема таблиц для MariaDB:
 ```mysql
 CREATE TABLE IF NOT EXISTS `log` (
 `created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
