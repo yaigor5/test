@@ -18,7 +18,7 @@ if ($@) {
     print "Модуль Term::ANSIColor не установлен. Установка...\n";
     CPAN::install('Term::ANSIColor');
 } else { print "Term::ANSIColor уже установлен.\n"; }
-eval {
+#eval {
     # проверка доступности MySQL сервера
     eval "use Config::IniFiles";
     if ($@) {
@@ -85,7 +85,7 @@ eval {
     unless ($result) { $dbh->do("CREATE DATABASE $mysql_db"); }
     #--------------------------------------------------------------------------
     color_print('type'=>'info', 'message'=>"Приготовление к работе выполнено.");
-};
+#};
 
 # init процедуры 
 sub install_cpan { # CPAN
