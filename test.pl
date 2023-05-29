@@ -11,7 +11,7 @@ $|=1; ## запрещаем буферизацию вывода
 use utf8;
 use Mojolicious::Lite;
 # db init
-my $dbh=Lib::connect_to_database();
+my $dbh=Lib1::connect_to_database();
 
 
 get '/' => sub {
