@@ -61,6 +61,7 @@ sub check_table_exists {
     
     ## debug
     print dump($res)."\n";
+    exit;
 
     return $res;
 }
