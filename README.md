@@ -90,7 +90,7 @@ ___
 - [x] Входные данные отдельно от кода
     - [x] конфиг для коннектора к БД (config.ini)
 - [ ] Выбор основных модулей для ~~проекта~~ конкретной задачи
-    - [x] основной скелет - Mojolicious::Lite
+    - [x] основной скелет - [Mojolicious::Lite](https://metacpan.org/pod/Mojolicious::Lite "на metacpan.org")
     - [x] считывание конфига - Config::IniFile
     - [ ] парсинг лога - Text::ParseWords
     - [ ] вьюшка - bootstrap
