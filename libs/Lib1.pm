@@ -159,7 +159,7 @@ sub log_line_parser {
             ## debug
             print "ID='".$log_data{id}."'\n";
             if (!$log_data{id}) { 
-                print $log_line;
+                print $log_line."\n";
                 exit; 
             }
 
