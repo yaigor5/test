@@ -7,4 +7,4 @@ requires 'FindBin';
 requires 'Text::ParseWords';
 requires 'DateTime::Format::MySQL';
 requires 'DATA::Dumper';
-requires 'App::Coloris';
+requires 'App::Colorist';
