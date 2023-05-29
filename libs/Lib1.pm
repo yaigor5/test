@@ -60,7 +60,7 @@ sub check_table_exists {
     my $res=$sth->fetchrow_array;
     
     ## debug
-    print dump($res)."\n";
+    print dump($sth)."\n";
     exit;
 
     return $res;
