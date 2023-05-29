@@ -117,7 +117,7 @@ sub log_line_parser {
     my ($dbh, $log_line, $message_insert_sth, $log_insert_sth) = @_;
 
     # экранирование '
-    $log_line = quotmeta($log_line);
+    $log_line =~ s/'/\\'/g;
 
     # парсинг строки
     my @fields = parse_line(' ', 0, $log_line);
