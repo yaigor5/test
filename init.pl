@@ -35,6 +35,18 @@ eval {
         color_print('type'=>'warning', 'message'=>"Модуль DBD::mysql не установлен. Установка...");
         CPAN::install("DBD::mysql");
     }
+    # дополнительно проверка и установка зависимостей из cpanfile
+    eval "use App::cpanminus";
+    if ($@) {
+        color_print('type'=>'warning', 'message'=>"Модуль App::cpanminus не установлен. Установка...");
+        CPAN::install("App::cpanminus");
+    }
+    install_dependencies();
+    if ($? != 0) { 
+        color_print('type'=>'warning', 'message'=>"Ошибка установки зависимостей."); 
+        exit;  
+    } else { color_print('type'=>'info', 'message'=>"Установка зависимостей Perl завершена."); }
+    # считываем конфиг для подключения к БД
     my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
     my $mysql_host = $config->val('database', 'host');
     my $mysql_port = $config->val('database', 'port');
@@ -42,7 +54,7 @@ eval {
     my $mysql_pass = $config->val('database', 'password');
     my $mysql_db = $config->val('database', 'dbname');
     my $dbh;
-    # подключение к MySQL
+    # пробное подключение к MySQL
     eval {
         $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port", $mysql_user, $mysql_pass);
     };
@@ -86,9 +98,21 @@ sub install_cpan { # CPAN
         die "Не удалось установить CPAN: $!\n";
     }
 }
+sub check_cpanm { # cpanm - проверка наличия
+    my $cpanm_installed = `which cpanm`;
+    chomp $cpanm_installed;
+    return $cpanm_installed;
+}
+sub install_dependencies { # установка зависимостей из cpanfile
+    my $cpanm = App::cpanminus->new;
+    $cpanm->install('--installdeps', '.');
+}
 sub check_curl_installed { # curl
     my $output = `curl --version 2>&1`;
     return ($output =~ /curl (\d+)/);
+}
+sub install_dependencies_os { # установка зависимостей
+    system('curl -L https://cpanmin.us | perl - App::cpanminus');
 }
 sub install_curl { # curl
     my $command = get_package_manager()." install -y curl";
