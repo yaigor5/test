@@ -179,7 +179,7 @@ sub log_parser {
     my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
     my $log_file=$config->val('log', 'path')."/".$config->val('log', 'filename');
 
-    if ($log_file=$config->val('flag', 'done')) { 
+    if ($config->val('flag', 'done')) { 
         print "Уже считывали данные из лог файла\n";
         return; 
     }
