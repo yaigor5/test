@@ -1,4 +1,4 @@
-requires 'Mojolicious::Lite', '>= 9.32, < 9.33';
+requires 'Mojolicious::Lite', '>= 9.32';
 requires 'Config::IniFiles', '>= 3.000003, < 3.000004';
 requires 'Term::ANSIColor', '>= 5.01, < 5.02';
 requires 'DBI', '>= 1.643';
