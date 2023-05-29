@@ -122,6 +122,10 @@ sub log_line_parser {
     # обработка явных некорректностей
     if (! defined $fields[0] || ! defined $fields[1]) {
         print "В этой строке лога некорректный формат - проблема с timestamp:\n$log_line\n";
+        ## debug
+        for (@fields) { print "'".$_."'\n"; }
+        exit;
+        
         return;
     }
     if (!$fields[2]) {
