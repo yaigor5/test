@@ -44,6 +44,11 @@ if ($? != 0) {
     color_print('type'=>'warning', 'message'=>"Ошибка установки зависимостей."); 
     exit;  
 } else { color_print('type'=>'info', 'message'=>"Установка зависимостей Perl завершена."); }
+
+use Config::IniFiles;
+use DBI;
+use DBD::mysql;
+
 # считываем конфиг для подключения к БД
 my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
 my $mysql_host = $config->val('database', 'host');
