@@ -26,7 +26,7 @@ sub connect_to_database {
     my $mysql_user = $config->val('database', 'username');
     my $mysql_pass = $config->val('database', 'password');
     my $mysql_db = $config->val('database', 'dbname');
-    $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port;database=$mysql_db", $mysql_user, $mysql_pass);
+    my $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port;database=$mysql_db", $mysql_user, $mysql_pass);
     die "Не удалось подключиться к базе данных: $DBI::errstr" unless $dbh;
     return $dbh;
 }
