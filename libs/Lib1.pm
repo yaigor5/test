@@ -139,7 +139,7 @@ sub log_line_parser {
 
     # обработка флага в строке
     if (defined $fields[3]) { # есть флаг
-        $log_data{flag}=chomp($fields[3]);
+        $log_data{flag}=$fields[3];
         
         ## debug
         print "FLAG='".$log_data{flag}."'\n";
