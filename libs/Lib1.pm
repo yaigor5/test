@@ -120,7 +120,7 @@ sub log_line_parser {
     my @fields = parse_line(' ', 0, $log_line);
 
     # обработка явных некорректностей
-    if (!$fields[0] || $fields[0]!~/^\d{4}\-\d{2}\-\d{2}/) {
+    if (! defined $fields[0] || ! defined $fields[1]) {
         print "В этой строке лога некорректный формат - проблема с timestamp:\n$log_line\n";
         return;
     }
