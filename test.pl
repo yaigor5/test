@@ -1,19 +1,24 @@
 #!/usr/bin/perl -w
 use strict;
 use warnings;
-#use Lib1 'lib'; # Добавляем путь к каталогу "libs"
-#BEGIN { unshift(@INC, '/var/www/cgi-bin/libs'); }
 use FindBin qw($RealBin);
 use lib "$RealBin/libs";
 use Lib1;
-#use Lib qw(connect_to_database);
-$|=1; ## запрещаем буферизацию вывода
 use utf8;
 use Mojolicious::Lite;
-# db init
+$|=1; ## запрещаем буферизацию вывода
+
+## Инициализация
+## init DB
 my $dbh=Lib1::connect_to_database();
+## обеспечиваем структуру таблиц
+Lib1::check_and_prepare_sql_structure();
+
+## Парсер - разовый запуск при отсутствии ротации лога
 
 
+## Вьюшка
+## вывод основного содержимого на экран
 get '/' => sub {
     my $c = shift;
     my $sth = $dbh->prepare("SELECT * FROM `message`");
@@ -26,6 +31,7 @@ get '/' => sub {
     $c->render('index');
 };
 
+## запуск mojo
 app->start;
 
 
