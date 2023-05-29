@@ -38,14 +38,13 @@ eval {
     my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
     my $mysql_host = $config->val('database', 'host');
     my $mysql_port = $config->val('database', 'port');
-    my $mysql_socket = $config->val('database', 'socket');
     my $mysql_user = $config->val('database', 'username');
     my $mysql_pass = $config->val('database', 'password');
     my $mysql_db = $config->val('database', 'dbname');
     my $dbh;
     # подключение к MySQL
     eval {
-        $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port;mysql_socket=$mysql_socket", $mysql_user, $mysql_pass);
+        $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port", $mysql_user, $mysql_pass);
     };
     # при недоступности - установка и настройка
     if ($@ || !$dbh) {
@@ -54,7 +53,7 @@ eval {
         install_mysql();
         # настройка MySQL
         #system("sudo mysql -e 'ALTER USER \"root\"@\"localhost\" IDENTIFIED WITH mysql_native_password BY \"\"; FLUSH PRIVILEGES;'");
-        my $dbh_root = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port;mysql_socket=$mysql_socket", 'root', '');
+        my $dbh_root = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port", 'root', '');
         die "Не удалось подключиться к MySQL серверу с пользователем root." unless $dbh_root;
         # cоздание пользователя
         print "CREATE USER '$mysql_user'\@'$mysql_host'\n";
@@ -62,7 +61,7 @@ eval {
         $dbh_root->do("CREATE USER '$mysql_user'\@'$mysql_host'");
         $dbh_root->do("GRANT ALL PRIVILEGES ON $mysql_db.* TO '$mysql_user'\@'$mysql_host' IDENTIFIED BY '$mysql_pass'");
         # повторно проверка доступности MySQL
-        $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port;mysql_socket=$mysql_socket", $mysql_user, $mysql_pass);
+        $dbh = DBI->connect("DBI:mysql:host=$mysql_host;port=$mysql_port", $mysql_user, $mysql_pass);
         die "Не удалось подключиться к MySQL серверу после установки и настройки." unless $dbh;
     }
     # проверка наличия DB
