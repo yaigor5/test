@@ -73,6 +73,7 @@ CREATE INDEX log_address_idx ON log USING hash (address);
 
 ___
 ## Описание по решению
+
 ### Оставляем за рамками рассмотрения:
 1. Способ запуска парсера логов - в данном случае запускается разово в теле основной части.
 2. Ротацию лога и прочее системное.
@@ -113,9 +114,10 @@ ___
     - [ ] документирование процедур **libs/Lib1.pm**
     - [ ] тестирование основного тела **test.pl**
 
-### Внесены необходимые изменения:
+### Внесены необходимые изменения (требуется корректировка или уточнение вводных):
 1. Поле 'str' сделал типа 'text' иначе информация не умещалась (по условию это поле аналог varchar(255) раз не указана длина), но по логике обычно такие поля не менее чем 'text'
-2. В таблице 'message' поле 'id' по условию 'NOT NULL', но при этом в логах не везде есть id=xxxx. Для полноты данных - изменение на 'DEFAULT NULL'
+2. В таблице 'message' поле 'id' по условию 'NOT NULL' (PRIMARY ключ), но при этом в логах не везде есть id=xxxx - отбрасываются без обработки строки без 'id'.
+
 ### Схема таблиц для MariaDB:
 ```mysql
 CREATE TABLE IF NOT EXISTS `log` (
@@ -128,7 +130,7 @@ KEY `log_address_idx` (`address`)
 
 CREATE TABLE IF NOT EXISTS `message` (
 `created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-`id` varchar(255) DEFAULT NULL,
+`id` varchar(255) NOT NULL,
 `int_id` char(16) NOT NULL,
 `str` text NOT NULL,
 `status` tinyint(1) DEFAULT NULL,

@@ -90,7 +90,7 @@ sub check_and_prepare_sql_structure {
     my $schema_message = "
     CREATE TABLE IF NOT EXISTS `message` (
     `created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `id` varchar(255) DEFAULT NULL,
+    `id` varchar(255) NOT NULL,
     `int_id` char(16) NOT NULL,
     `str` text NOT NULL,
     `status` tinyint(1) DEFAULT NULL,
@@ -146,25 +146,14 @@ sub log_line_parser {
 
         if ($log_data{flag} eq '<=') { # прибытие сообщения (в этом случае за флагом следует адрес отправителя)
             #$log_data{from}=$fields[4]; # адрес отправителя - нигде не используется
-            
             for (@fields) { # поиск значения id=xxxx - только для входящих - определено условием
                 if ($_=~/^id=(.*)$/) { 
                     $log_data{id} = $1; # = значение поля id=xxxx из строки лога
-                    ## debug
-                    #print "ID='".$log_data{id}."'\n";
                 }
             }
-            ## debug
-            #print "ID='".$log_data{id}."'\n";
-            if (!$log_data{id}) { 
-                print $log_line."\n";
-                exit; 
+            if (!$log_data{id}) { # отбрасываем - эту строку невозможно добавить в таблицу без 'id'
+                return; 
             }
-
-            #if ($log_data{str} =~ /\sid=(\S+)\s/) { # поиск значения id=xxxx - только для входящих - определено условием
-            #    $log_data{id} = $1; # = значение поля id=xxxx из строки лога
-            #} 
-
             $log_data{tbl}='message'; # into message table - определено условием
         } elsif ($log_data{flag} eq '=>') { # нормальная доставка сообщения
             $log_data{to}=$fields[4]; # адрес получателя
