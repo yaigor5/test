@@ -1,4 +1,4 @@
-package MyFunctions;
+package Lib;
 
 our $VERSION = '1.0';
 our $CREATED_DATE = '2023-05-26';
