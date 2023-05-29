@@ -201,7 +201,7 @@ sub log_parser {
     }
 
     my $dbh=connect_to_database();
-
+    my ($im, $il);
     # Подготовка SQL-запросов для вставки данных в таблицы
     my $message_insert_sth = $dbh->prepare('INSERT INTO `message` (`created`, `int_id`, `str`, `id`) VALUES (?, ?, ?, ?)');
     my $log_insert_sth = $dbh->prepare('INSERT INTO `log` (`created`, `int_id`, `str`, `address`) VALUES (?, ?, ?, ?)');
@@ -213,8 +213,8 @@ sub log_parser {
     while (my $line = <$fh>) {
         chomp($line);
         log_line_parser($dbh,$line,\$message_insert_sth,\$log_insert_sth);
-        ## debug
-        #print dump($message_insert_sth)."\n" if $message_insert_sth;
+        # подсчет
+        if ($message_insert_sth) { $im++; } else { $il++; }
     }
 
     # закрытие соединений
@@ -223,6 +223,8 @@ sub log_parser {
 
     # сохранение флага в конфиге
     $config->setval('flag', 'done', '1');
+    $config->setval('flag', 'im', $im);
+    $config->setval('flag', 'il', $il);
     $config->RewriteConfig();
 
 }
