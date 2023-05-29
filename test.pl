@@ -1,13 +1,14 @@
 #!/usr/bin/perl -w
 use strict;
 use warnings;
-use lib 'lib'; # Добавляем путь к каталогу "lib"
+#use lib 'lib'; # Добавляем путь к каталогу "lib"
+BEGIN { unshift(@INC, '/var/www/cgi-bin/lib'); }
 use libs;
 $|=1; ## запрещаем буферизацию вывода
 use utf8;
 use Mojolicious::Lite;
 # db init
-#my $dbh=libs::connect_to_database();
+my $dbh=libs::connect_to_database();
 
 
 get '/' => sub {

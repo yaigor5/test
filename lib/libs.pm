@@ -3,6 +3,16 @@ package MyFunctions;
 our $VERSION = '1.0';
 our $CREATED_DATE = '2023-05-26';
 
+our(@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
+BEGIN { 
+	unshift(@INC, 'lib');
+	use Exporter ();
+	@EXPORT = qw(
+		connect_to_database
+	);
+	%EXPORT_TAGS = ( FIELDS => [ @EXPORT ] );
+}
+
 use strict;
 use warnings;
 use DBI;
