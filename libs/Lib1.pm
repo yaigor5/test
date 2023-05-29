@@ -140,10 +140,6 @@ sub log_line_parser {
     # обработка флага в строке
     if (defined $fields[3]) { # есть флаг
         $log_data{flag}=$fields[3];
-        
-        ## debug
-        #print "FLAG='".$log_data{flag}."'\n";
-
         if ($log_data{flag} eq '<=') { # прибытие сообщения (в этом случае за флагом следует адрес отправителя)
             #$log_data{from}=$fields[4]; # адрес отправителя - нигде не используется
             for (@fields) { # поиск значения id=xxxx - только для входящих - определено условием
@@ -170,10 +166,6 @@ sub log_line_parser {
         print "В этой строке лога неполный формат - нет данных:\n$log_line\n";
     }
 
-    ## debug
-    #print "TABLE='".$log_data{tbl}."' --> ".$log_data{str}."\n";
-
-
     # В таблицу 'message' должны попасть только строки прибытия сообщения (с флагом '<='').
     # В таблицу 'log' записываются все остальные строки - таким образом по условию исключаются сообщения прибытия из 'log'
 
@@ -197,9 +189,6 @@ sub log_parser {
         print "Уже считывали данные из лог файла\n";
         return; 
     }
-
-    ## debug
-    print "##################### done='".$config->val('flag', 'done')."'\n";
 
     my $dbh=connect_to_database();
 
