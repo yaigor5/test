@@ -148,7 +148,13 @@ sub log_line_parser {
             #$log_data{from}=$fields[4]; # адрес отправителя - нигде не используется
             
             for (@fields) {
-                if ($_=~/^id=/) { $log_data{id} = $_; }
+                if ($_=~/^id=(.*)$/) { 
+                    $log_data{id} = $1; 
+
+                    ## debug
+                    print "ID='".$log_data{id}."'\n";
+
+                }
             }
 
             #if ($log_data{str} =~ /\sid=(\S+)\s/) { # поиск значения id=xxxx - только для входящих - определено условием
@@ -213,7 +219,7 @@ sub log_parser {
         chomp($line);
         log_line_parser($dbh,$line,\$message_insert_sth,\$log_insert_sth);
         ## debug
-        print dump($message_insert_sth)."\n" if $message_insert_sth;
+        #print dump($message_insert_sth)."\n" if $message_insert_sth;
     }
 
     # закрытие соединений
