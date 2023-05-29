@@ -3,3 +3,4 @@ requires 'Term::ANSIColor', '>= 5.01, < 5.02';
 requires 'DBI', '>= 1.643';
 requires 'DBD::mysql', '>= 4.050';
 requires 'Mojolicious::Lite';
+requires 'FindBin';
