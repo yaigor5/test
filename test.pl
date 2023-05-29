@@ -1,9 +1,10 @@
 #!/usr/bin/perl -w
 use strict;
 use warnings;
-#use Lib 'lib'; # Добавляем путь к каталогу "lib"
-BEGIN { unshift(@INC, '/var/www/cgi-bin/lib'); }
-use Lib qw(connect_to_database);
+use Lib 'lib'; # Добавляем путь к каталогу "lib"
+#BEGIN { unshift(@INC, '/var/www/cgi-bin/lib'); }
+#use Lib qw(connect_to_database);
+use Lib;
 $|=1; ## запрещаем буферизацию вывода
 use utf8;
 use Mojolicious::Lite;
