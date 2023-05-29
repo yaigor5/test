@@ -18,7 +18,11 @@ if ($@) {
     print "Модуль Term::ANSIColor не установлен. Установка...\n";
     CPAN::install('Term::ANSIColor');
 } else { print "Term::ANSIColor уже установлен.\n"; }
-# проверка доступности MySQL сервера
+eval "use App::Colorist";
+if ($@) {
+    color_print('type'=>'warning', 'message'=>"Модуль App::Colorist не установлен. Установка...");
+    CPAN::install('App::Colorist');
+}
 eval "use Config::IniFiles";
 if ($@) {
     color_print('type'=>'warning', 'message'=>"Модуль Config::IniFiles не установлен. Установка...");
