@@ -177,7 +177,9 @@ sub log_line_parser {
     # В таблицу 'log' записываются все остальные строки - таким образом по условию исключаются сообщения прибытия из 'log'
 
     # возврат '
-    $log_line = eval "qq($log_line)";
+    #$log_line = eval "qq($log_line)";
+    my @words = quotewords('\s+', 1, $log_data{str});
+    $log_data{str}= join("", @words);
 
     # распределение хэша в БД
     if ($log_data{tbl} eq 'message') {
