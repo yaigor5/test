@@ -115,7 +115,7 @@ ___
 
 ### Внесены необходимые изменения:
 1. Поле 'str' сделал типа 'text' иначе информация не умещалась (по условию это поле аналог varchar(255) раз не указана длина), но по логике обычно такие поля не менее чем 'text'
-2. В таблице 'message' поле 'id' по условию 'NOT NULL', но при этом в логах не везде есть id=xxxx
+2. В таблице 'message' поле 'id' по условию 'NOT NULL', но при этом в логах не везде есть id=xxxx. Для полноты данных - изменение на 'DEFAULT NULL'
 ### Схема таблиц для MariaDB:
 ```mysql
 CREATE TABLE IF NOT EXISTS `log` (
@@ -128,7 +128,7 @@ KEY `log_address_idx` (`address`)
 
 CREATE TABLE IF NOT EXISTS `message` (
 `created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-`id` varchar(255) NOT NULL,
+`id` varchar(255) DEFAULT NULL,
 `int_id` char(16) NOT NULL,
 `str` text NOT NULL,
 `status` tinyint(1) DEFAULT NULL,

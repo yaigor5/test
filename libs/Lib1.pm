@@ -90,7 +90,7 @@ sub check_and_prepare_sql_structure {
     my $schema_message = "
     CREATE TABLE IF NOT EXISTS `message` (
     `created` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-    `id` varchar(255) NOT NULL,
+    `id` varchar(255) DEFAULT NULL,
     `int_id` char(16) NOT NULL,
     `str` text NOT NULL,
     `status` tinyint(1) DEFAULT NULL,
@@ -150,14 +150,12 @@ sub log_line_parser {
             for (@fields) { # поиск значения id=xxxx - только для входящих - определено условием
                 if ($_=~/^id=(.*)$/) { 
                     $log_data{id} = $1; # = значение поля id=xxxx из строки лога
-
                     ## debug
-                    print "ID='".$log_data{id}."'\n";
-
+                    #print "ID='".$log_data{id}."'\n";
                 }
             }
             ## debug
-            print "ID='".$log_data{id}."'\n";
+            #print "ID='".$log_data{id}."'\n";
             if (!$log_data{id}) { 
                 print $log_line."\n";
                 exit; 
