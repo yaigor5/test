@@ -184,6 +184,9 @@ sub log_parser {
     my $message_insert_sth = $dbh->prepare('INSERT INTO `message` (`created`, `int_id`, `str`, `id`) VALUES (?, ?, ?, ?)');
     my $log_insert_sth = $dbh->prepare('INSERT INTO `log` (`created`, `int_id`, `str`, `address`) VALUES (?, ?, ?, ?)');
 
+    ## debug
+    print $log_file."\n"; exit;
+
     # открытие файла лога
     open(my $fh, '<', $log_file) or die "Can't open $log_file: $!";
 
