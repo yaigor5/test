@@ -41,6 +41,7 @@ if ($@) {
         color_print('type'=>'warning', 'message'=>"Модуль App::cpanminus не установлен. Установка...");
         CPAN::install("App::cpanminus");
     }
+    # установка
     install_dependencies();
     if ($? != 0) { 
         color_print('type'=>'warning', 'message'=>"Ошибка установки зависимостей."); 
