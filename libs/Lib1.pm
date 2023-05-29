@@ -146,9 +146,15 @@ sub log_line_parser {
 
         if ($log_data{flag} eq '<=') { # прибытие сообщения (в этом случае за флагом следует адрес отправителя)
             #$log_data{from}=$fields[4]; # адрес отправителя - нигде не используется
-            if ($log_data{str} =~ /\sid=(\S+)\s/) { # поиск значения id=xxxx - только для входящих - определено условием
-                $log_data{id} = $1; # = значение поля id=xxxx из строки лога
-            } 
+            
+            for (@fields) {
+                if ($_=~/^id=/) { $log_data{id} = $_; }
+            }
+
+            #if ($log_data{str} =~ /\sid=(\S+)\s/) { # поиск значения id=xxxx - только для входящих - определено условием
+            #    $log_data{id} = $1; # = значение поля id=xxxx из строки лога
+            #} 
+
             $log_data{tbl}='message'; # into message table - определено условием
         } elsif ($log_data{flag} eq '=>') { # нормальная доставка сообщения
             $log_data{to}=$fields[4]; # адрес получателя
@@ -207,7 +213,7 @@ sub log_parser {
         chomp($line);
         log_line_parser($dbh,$line,\$message_insert_sth,\$log_insert_sth);
         ## debug
-        print $message_insert_sth."\n" if $message_insert_sth;
+        print dump($message_insert_sth)."\n" if $message_insert_sth;
     }
 
     # закрытие соединений
