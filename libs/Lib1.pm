@@ -177,7 +177,6 @@ sub log_line_parser {
     # В таблицу 'log' записываются все остальные строки - таким образом по условию исключаются сообщения прибытия из 'log'
 
     # возврат '
-    #$log_line = eval "qq($log_line)";
     my @words = quotewords('\s+', 1, $log_data{str});
     $log_data{str}= join("", @words);
 
@@ -203,7 +202,7 @@ sub log_parser {
     }
 
     my $dbh=connect_to_database();
-    my ($im, $il);
+    my $i;
     # Подготовка SQL-запросов для вставки данных в таблицы
     my $message_insert_sth = $dbh->prepare('INSERT INTO `message` (`created`, `int_id`, `str`, `id`) VALUES (?, ?, ?, ?)');
     my $log_insert_sth = $dbh->prepare('INSERT INTO `log` (`created`, `int_id`, `str`, `address`) VALUES (?, ?, ?, ?)');
@@ -216,7 +215,7 @@ sub log_parser {
         chomp($line);
         log_line_parser($dbh,$line,\$message_insert_sth,\$log_insert_sth);
         # подсчет
-        if ($message_insert_sth) { $im++; } else { $il++; }
+        $i++;
     }
 
     # закрытие соединений
@@ -225,8 +224,7 @@ sub log_parser {
 
     # сохранение флага в конфиге
     $config->setval('flag', 'done', '1');
-    $config->setval('flag', 'im', $im);
-    $config->setval('flag', 'il', $il);
+    $config->setval('flag', 'counter', $im);
     $config->RewriteConfig();
 
 }
