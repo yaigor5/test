@@ -26,7 +26,7 @@ get '/' => sub {
 app->start;
 
 
-DATA
+__DATA__
 
 @@ index.html.ep
 <!DOCTYPE html>
@@ -55,14 +55,3 @@ DATA
     <% } %>
 </body>
 </html>
-
-
-
-
-
-__END__
-
-#print "Content-type: text/html\n\n";
-#print "Модуль libs, версия: $libs::VERSION<br>\n";
-#print "Дата создания модуля: $libs::CREATED_DATE<br>\n";
-
