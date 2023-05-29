@@ -1,8 +1,8 @@
 #!/usr/bin/perl -w
 use strict;
 use warnings;
-#use lib 'lib'; # Добавляем путь к каталогу "lib"
-BEGIN { unshift(@INC, '/var/www/cgi-bin/lib'); }
+use lib 'lib'; # Добавляем путь к каталогу "lib"
+#BEGIN { unshift(@INC, '/var/www/cgi-bin/lib'); }
 use libs;
 $|=1; ## запрещаем буферизацию вывода
 use utf8;
