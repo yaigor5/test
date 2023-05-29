@@ -19,6 +19,7 @@ use DBI;
 use Config::IniFiles;
 use Text::ParseWords;
 use DateTime::Format::MySQL;
+use DATA::Dumper;
 
 # процедура для подключения к БД
 sub connect_to_database {
@@ -56,7 +57,12 @@ sub check_table_exists {
     my ($dbh, $table_name) = @_;
     my $sth = $dbh->table_info(undef, undef, $table_name, 'TABLE');
     $sth->execute();
-    return $sth->fetchrow_array;
+    my $res=$sth->fetchrow_array;
+    
+    ## debug
+    Dumper($res);
+
+    return $res;
 }
 
 ## TODO - bootstrap view
