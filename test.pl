@@ -41,9 +41,9 @@ get '/' => sub {
         $max_elements--; # 0..max
         if (@results >= $max_elements) {
             my @results_slice = @results[0..$max_elements];
-            $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', nohide => '1', title => 'Warning', content => "Превышено количество результатов = ".($max_elements+1) }]);
+            $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', autohide => '0', title => 'Warning', content => "Превышено количество результатов = ".($max_elements+1) }]);
         } else {
-            $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-info', nohide => '0', title => 'Info', content => "Исполнено" }]);
+            $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Info', content => "Исполнено" }]);
         }
     } else {
         $c->render(template => 'index');
@@ -119,29 +119,19 @@ __DATA__
         <% } %>
     </div>
 
-    <div aria-live="polite" aria-atomic="true" class="position-relative">
-        <!-- Position it: -->
-        <!-- - `.toast-container` for spacing between toasts -->
-        <!-- - `.position-absolute`, `top-0` & `end-0` to position the toasts in the upper right corner -->
-        <!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
-        <div class="toast-container position-absolute top-0 end-0 p-3">
-            <!-- Then put toasts within -->
-
-            <% if (stash('messages')) { %>
-                <% foreach my $message (@{stash('messages')}) { %>
-                    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="6000" <% if (!$message->{nohide}) { %>data-autohide="false"<% } %>>
-                        <div class="toast-header <%= $message->{type} %> text-white">
-                            <strong class="me-auto"><%= $message->{title} %></strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                        <div class="toast-body">
-                            <%= $message->{content} %>
-                        </div>
-                    </div>
-                <% } %>
-            <% } %>
-        </div>
-    </div>
+    <% if (stash('messages')) { %>
+        <% foreach my $message (@{stash('messages')}) { %>
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="6000" <% if (!$message->{autohide}) { %>data-autohide="false"<% } %>>
+                <div class="toast-header <%= $message->{type} %> text-white">
+                    <strong class="me-auto"><%= $message->{title} %></strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    <%= $message->{content} %>
+                </div>
+            </div>
+        <% } %>
+    <% } %>
 
     <script>
         $('.toast').toast('show');
