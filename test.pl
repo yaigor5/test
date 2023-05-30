@@ -128,8 +128,8 @@ __DATA__
     </div>
 
     <div class="toast-container">
-        <!--<% if (stash('messages')) { %>-->
-            <!--<% foreach my $message (@{stash('messages')}) { %>-->
+        <% if (stash('messages')) { %>
+            <% foreach my $message (@{stash('messages')}) { %>
                 <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
                     <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                         <div class="toast-header <%= $message->{type} %> text-white">
@@ -142,19 +142,45 @@ __DATA__
                         </div>
                     </div>
                 </div>
-            <!--<% } %>-->
-        <!--<% } %>-->
+            <% } %>
+        <% } %>
     </div>
 
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var toasts = document.querySelectorAll('.toast');
-            var toastList = new bootstrap.Toast(toasts, { autohide: true, delay: 60000 });
-            toastList.forEach(function(toast) {
-                toastList.show();
-            });
-        });
-    </script>
+    <div aria-live="polite" aria-atomic="true" class="position-relative">
+    <!-- Position it: -->
+    <!-- - `.toast-container` for spacing between toasts -->
+    <!-- - `.position-absolute`, `top-0` & `end-0` to position the toasts in the upper right corner -->
+    <!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
+    <div class="toast-container position-absolute top-0 end-0 p-3">
+
+        <!-- Then put toasts within -->
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <img src="..." class="rounded me-2" alt="...">
+            <strong class="me-auto">Bootstrap</strong>
+            <small class="text-muted">just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            See? Just like this.
+        </div>
+        </div>
+
+        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <img src="..." class="rounded me-2" alt="...">
+            <strong class="me-auto">Bootstrap</strong>
+            <small class="text-muted">2 seconds ago</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            Heads up, toasts will stack automatically
+        </div>
+        </div>
+    </div>
+    </div>
+
+
 </body>
 </html>
