@@ -44,11 +44,11 @@ get '/' => sub {
         $c->render(template => 'index');
     }
 
+    # debug
     # Просмотр сгенерированного содержимого
-    my $rendered_content = $c->rendered;
-
+    #my $rendered_content = $c->rendered;
     # Вывод сгенерированного содержимого в консоль
-    $c->app->log->debug($rendered_content);
+    #$c->app->log->debug($rendered_content);
 
 };
 
