@@ -38,7 +38,8 @@ get '/' => sub {
         # TODO: переделать на анализ count()
         ## 100 !
         my $max_elements = 2;
-        if (@results > $max_elements) {
+        $max_elements--; # 0..max
+        if (@results >= $max_elements) {
             my @results_slice = @results[0..$max_elements];
             $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', title => 'Warning', content => 'Превышено количество результатов' }]);
         } else {
@@ -70,15 +71,6 @@ __DATA__
     <title>Вывод</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
-    <style>
-        .toast {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 300px;
-            z-index: 9999;
-        }
-    </style>
 </head>
 <body>
     <div class="container mt-4">
