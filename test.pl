@@ -41,7 +41,7 @@ get '/' => sub {
         $max_elements--; # 0..max
         if (@results >= $max_elements) {
             my @results_slice = @results[0..$max_elements];
-            $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', title => 'Warning', content => 'Превышено количество результатов' }]);
+            $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', title => 'Warning', content => "Превышено количество результатов = $max_elements" }]);
         } else {
             $c->render(template => 'index', results => \@results);
         }
@@ -51,9 +51,9 @@ get '/' => sub {
 
     # debug
     # Просмотр сгенерированного содержимого
-    #my $rendered_content = $c->rendered;
+    my $rendered_content = $c->rendered;
     # Вывод сгенерированного содержимого в консоль
-    #$c->app->log->debug($rendered_content);
+    $c->app->log->debug($rendered_content);
 
 };
 
