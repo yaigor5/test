@@ -82,7 +82,7 @@ __DATA__
     </style>
 </head>
 <body>
-    <div class="container mt-4 fs-5">
+    <div class="container mt-4 fs-6">
         <div class="row">
             <div class="col">
                 <form method="GET" action="/">
