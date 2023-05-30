@@ -37,7 +37,7 @@ get '/' => sub {
 
         ## 100 !
         if (@results > 2) {
-            $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-warning', title => 'Warning', content => 'Превышено количество результатов' }]);
+            $c->render(template => 'index', messages => [{ type => 'bg-warning', title => 'Warning', content => 'Превышено количество результатов' }]);
         } else {
             $c->render(template => 'index', results => \@results);
         }
