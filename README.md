@@ -79,7 +79,8 @@ ___
 ```bash
 ./test.pl daemon
 ```
-[<img src="img/2023-05-30_130837.png">]()
+![run](img/2023-05-30_130837.png)
+
 
 
 
