@@ -41,7 +41,7 @@ get '/' => sub {
         $max_elements--; # 0..max
         if (@results >= $max_elements) {
             my @results_slice = @results[0..$max_elements];
-            $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', title => 'Warning', content => "Превышено количество результатов = $max_elements" }]);
+            $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', title => 'Warning', content => "Превышено количество результатов = ".($max_elements+1) }]);
         } else {
             $c->render(template => 'index', results => \@results);
         }
@@ -135,7 +135,6 @@ __DATA__
                                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                             </div>
                             <div class="toast-body">
-                                test
                                 <%= $message->{content} %>
                             </div>
                         </div>
