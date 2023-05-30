@@ -77,7 +77,16 @@ __DATA__
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     
     <style>
-        * { font-size: 12px; }
+        * { 
+            font-size: 12px; 
+        }
+        .toast {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            z-index: 9999;
+        }
     </style>
 </head>
 <body>
