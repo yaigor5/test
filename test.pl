@@ -24,9 +24,6 @@ plugin 'Charset' => {charset => 'UTF-8'};
 get '/' => sub {
     my $c = shift;
 
-    # Установка заголовка с правильным типом контента
-    $c->content_type('text/html; charset=UTF-8');
-
     my $search_text = $c->param('search_text');
 
     if ($search_text) {
