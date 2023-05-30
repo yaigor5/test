@@ -143,18 +143,6 @@ __DATA__
         <% } %>
     <% } %>
 
-    <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <img src="..." class="rounded me-2" alt="...">
-            <strong class="me-auto">Bootstrap</strong>
-            <small>11 мин. назад</small>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
-        </div>
-        <div class="toast-body">
-            Привет мир! Это тост-сообщение.
-        </div>
-    </div>
-
     <script>
         $('.toast').toast('show');
     </script>
