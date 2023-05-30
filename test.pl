@@ -79,6 +79,9 @@ __DATA__
             width: 300px;
             z-index: 9999;
         }
+        * {
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
