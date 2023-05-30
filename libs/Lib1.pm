@@ -98,11 +98,11 @@ sub check_table_exists {
     # Результат выполнения SQL-запроса.
     #
     # Действие функции:
-    # 1. Проверяет существование таблицы с использованием метода table_info объекта DBI.
-    # 2. Возвращает результат выполнения.
+    # 1. Проверяет существование таблицы с именем из $table_name.
+    # 2. Возвращает результат выполнения [0|1].
 
     my ($dbh, $table_name) = @_;
-    my $sth = $dbh->table_info(undef, undef, $table_name, 'TABLE');
+    my $sth = $dbh->do("SELECT count(*) FROM `information_schema`.`tables` WHERE `table_name`='".$table_name."'");
     $sth->execute();
     return $sth->fetchrow_array;
 }
