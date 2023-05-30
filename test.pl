@@ -43,7 +43,7 @@ get '/' => sub {
             my @results_slice = @results[0..$max_elements];
             $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', nohide => '1', title => 'Warning', content => "Превышено количество результатов = ".($max_elements+1) }]);
         } else {
-            $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-info', title => 'Info', content => "Исполнено" }]);
+            $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-info', nohide => '0', title => 'Info', content => "Исполнено" }]);
         }
     } else {
         $c->render(template => 'index');
