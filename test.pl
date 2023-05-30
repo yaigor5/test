@@ -132,6 +132,7 @@ __DATA__
         <% foreach my $message (@{stash('messages')}) { %>
             <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="6000" <% if (!$message->{autohide}) { %>data-autohide="false"<% } %>>
                 <div class="toast-header <%= $message->{type} %> text-white">
+                    <img src="..." class="rounded me-2" alt="...">
                     <strong class="me-auto"><%= $message->{title} %></strong>
                     <small>Только что</small>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
