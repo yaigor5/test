@@ -124,6 +124,7 @@ __DATA__
             <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="6000" <% if (!$message->{autohide}) { %>data-autohide="false"<% } %>>
                 <div class="toast-header <%= $message->{type} %> text-white">
                     <strong class="me-auto"><%= $message->{title} %></strong>
+                    <small>Только что</small>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
                 <div class="toast-body">
