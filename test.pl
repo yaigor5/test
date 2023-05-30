@@ -71,6 +71,15 @@ __DATA__
     <title>Вывод</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+    <style>
+        .toast {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            z-index: 9999;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-4">
@@ -131,7 +140,9 @@ __DATA__
         document.addEventListener('DOMContentLoaded', function() {
             var toasts = document.querySelectorAll('.toast');
             var toastList = new bootstrap.Toast(toasts, { autohide: true, delay: 60000 });
-            toastList.show();
+            toastList.forEach(function(toast) {
+                toastList.show();
+            });
         });
     </script>
 </body>
