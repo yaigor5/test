@@ -72,13 +72,6 @@ __DATA__
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
     <style>
-        .toast {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 300px;
-            z-index: 9999;
-        }
         * {
             font-size: 12px;
         }
@@ -125,14 +118,16 @@ __DATA__
 
     <!--<% if (stash('messages')) { %>-->
         <!--<% foreach my $message (@{stash('messages')}) { %>-->
-            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header <%= $message->{type} %> text-white">
-                    <strong class="me-auto"><%= $message->{title} %></strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body">
-                    test
-                    <%= $message->{content} %>
+            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header <%= $message->{type} %> text-white">
+                        <strong class="me-auto"><%= $message->{title} %></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        test
+                        <%= $message->{content} %>
+                    </div>
                 </div>
             </div>
         <!--<% } %>-->
