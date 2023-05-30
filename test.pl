@@ -16,11 +16,17 @@ Lib1::check_and_prepare_sql_structure();
 ## Парсер - разовый запуск при отсутствии ротации лога - TODO: вывод сообщений во вьюшку в виде тостов
 Lib1::log_parser();
 
+# Установка настроек для поддержки UTF-8
+plugin 'Charset' => {charset => 'UTF-8'};
 
 ## Вьюшка
 ## вывод основного содержимого на экран
 get '/' => sub {
     my $c = shift;
+
+    # Установка заголовка с правильным типом контента
+    $c->content_type('text/html; charset=UTF-8');
+
     my $search_text = $c->param('search_text');
 
     if ($search_text) {
