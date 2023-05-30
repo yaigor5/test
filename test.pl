@@ -23,19 +23,23 @@ get '/' => sub {
     my $c = shift;
     my $search_text = $c->param('search_text');
 
-    my $sth;
     if ($search_text) {
-        $sth = $dbh->prepare("SELECT * FROM `message` WHERE `str` LIKE ?");
+        my $sth = $dbh->prepare("SELECT * FROM `message` WHERE `str` LIKE ?");
         $sth->execute("%$search_text%");
-    }
 
-    my @results;
-    while (my $row = $sth->fetchrow_hashref) {
-        push @results, $row;
-    }
-    $c->stash(results => \@results);
+        my @results;
+        while (my $row = $sth->fetchrow_hashref) {
+            push @results, $row;
+        }
 
-    $c->render('index');
+        if (@results > 100) {
+            $c->render(template => 'index', messages => [{ type => 'bg-warning', title => 'Warning', content => 'Превышено количество результатов' }]);
+        } else {
+            $c->render(template => 'index', results => \@results);
+        }
+    } else {
+        $c->render(template => 'index');
+    }
 };
 
 
@@ -52,6 +56,15 @@ __DATA__
     <title>Вывод</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css">
+    <style>
+        .toast {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            z-index: 9999;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-4">
@@ -86,12 +99,32 @@ __DATA__
                                 </tr>
                             <% } %>
                         </tbody>
-                    </table>
-                </div>
-            </div>
-        <% } %>
-    </div>
+                   </table>
+                    </div>
+                </div>
+            <% } %>
+        </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+        <% if (stash('messages')) { %>
+            <% foreach my $message (@{stash('messages')}) { %>
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header <%= $message->{type} %> text-white">
+                        <strong class="me-auto"><%= $message->{title} %></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        <%= $message->{content} %>
+                    </div>
+                </div>
+            <% } %>
+        <% } %>                   
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var toasts = document.querySelectorAll('.toast');
+            var toastList = new bootstrap.Toast(toasts, { autohide: true, delay: 60000 });
+            toastList.show();
+        });
+    </script>
 </body>
 </html>
