@@ -17,7 +17,7 @@ Lib1::check_and_prepare_sql_structure();
 Lib1::log_parser();
 
 # Установка настроек для поддержки UTF-8
-plugin 'Charset' => {charset => 'UTF-8'};
+#plugin 'Charset' => {charset => 'UTF-8'};
 
 ## Вьюшка
 ## вывод основного содержимого на экран
