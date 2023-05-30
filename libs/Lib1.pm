@@ -323,7 +323,7 @@ sub log_parser {
 
     # сохранение флага в конфиге
     $config->setval('flag', 'done', '1');
-    $config->setval('flag', 'counter', $im);
+    $config->setval('flag', 'counter', $i);
     $config->RewriteConfig();
 
 }
