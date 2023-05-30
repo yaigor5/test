@@ -46,6 +46,13 @@ get '/' => sub {
     } else {
         $c->render(template => 'index');
     }
+
+    # Просмотр сгенерированного содержимого
+    my $rendered_content = $c->rendered;
+    # Вывод сгенерированного содержимого в консоль
+    $c->app->log->debug($rendered_content);
+
+
 };
 
 
