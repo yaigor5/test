@@ -23,38 +23,15 @@ Lib1::log_parser();
 ## вывод основного содержимого на экран
 get '/' => sub {
     my $c = shift;
-
-    # Установка заголовка с правильным типом контента
-    #$c->content_type('text/html; charset=UTF-8');
-
-    my $search_text = $c->param('search_text');
-
-    if ($search_text) {
-        my $sth = $dbh->prepare("SELECT * FROM `message` WHERE `str` LIKE ?");
-        $sth->execute("%$search_text%");
-
-        my @results;
-        while (my $row = $sth->fetchrow_hashref) {
-            push @results, $row;
-        }
-
-        if (@results > 100) {
-            $c->render(template => 'index', results => \@results);
-        } else {
-            $c->render(template => 'index', results => \@results);
-        }
-    } else {
-        $c->render(template => 'index');
+    my $sth = $dbh->prepare("SELECT * FROM `message`");
+    $sth->execute();
+    my @results;
+    while (my $row = $sth->fetchrow_hashref) {
+        push @results, $row;
     }
-
-    # Просмотр сгенерированного содержимого
-    my $rendered_content = $c->rendered;
-    # Вывод сгенерированного содержимого в консоль
-    $c->app->log->debug($rendered_content);
-
-
+    $c->stash(results => \@results);
+    $c->render('index');
 };
-
 
 ## запуск mojo
 app->start;
@@ -68,45 +45,24 @@ __DATA__
 <head>
     <title>Вывод</title>
     <meta charset="utf-8">
+    <!-- <link rel="stylesheet" type="text/css" href="/css/style.css"> -->
 </head>
 <body>
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col">
-                <form method="GET" action="/">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Введите текст" name="search_text">
-                        <button class="btn btn-primary" type="submit">Поиск</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-        <% if (stash('results')) { %>
-            <div class="row">
-                <div class="col">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>created</th>
-                                <th>int_id</th>
-                                <th>str</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% foreach my $row (@{stash('results')}) { %>
-                                <tr>
-                                    <td><%= $row->{created} %></td>
-                                    <td><%= $row->{int_id} %></td>
-                                    <td><%= $row->{str} %></td>
-                                </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        <% } %>
-    </div>
-
+    <% if (stash('results')) { %>
+        <table style='border: 1;'>
+            <thead>
+                <tr>
+                    <th>created</th><th>int_id</th><th>str</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% foreach my $row (@{stash('results')}) { %>
+                    <tr>
+                        <td><%= $row->{created} %></td><td><%= $row->{int_id} %></td><td><%= $row->{str} %></td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    <% } %>
 </body>
 </html>
