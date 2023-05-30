@@ -41,9 +41,9 @@ get '/' => sub {
         $max_elements--; # 0..max
         if (@results >= $max_elements) {
             my @results_slice = @results[0..$max_elements];
-            $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', title => 'Warning', content => "Превышено количество результатов = ".($max_elements+1) }]);
+            $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', nohide => '1', title => 'Warning', content => "Превышено количество результатов = ".($max_elements+1) }]);
         } else {
-            $c->render(template => 'index', results => \@results);
+            $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-info', title => 'Info', content => "Исполнено" }]);
         }
     } else {
         $c->render(template => 'index');
@@ -130,7 +130,7 @@ __DATA__
             <% if (stash('messages')) { %>
                 <% foreach my $message (@{stash('messages')}) { %>
                     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-                        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+                        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" <%= if ($message->{nohide}) { %> data-autohide="false" <% } %>>
                             <div class="toast-header <%= $message->{type} %> text-white">
                                 <strong class="me-auto"><%= $message->{title} %></strong>
                                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
