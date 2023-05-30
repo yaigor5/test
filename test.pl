@@ -26,14 +26,40 @@ get '/' => sub {
 
     my $search_text = $c->param('search_text');
 
-    if ($search_text) {
-        my $sth = $dbh->prepare("SELECT * FROM `message` WHERE `str` LIKE ?");
+    if ($search_text) { # введены данные для поиска
+        # создаем временную таблицу
+        my $tmp_table = "
+            CREATE TEMPORARY TABLE `lego` (
+                `created` timestamp NOT NULL,
+                `int_id` char(16) NOT NULL,
+                `str` text NOT NULL,
+                KEY `created`,
+                KEY `int_id`
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;        
+        ";
+        my $sth = $dbh->prepare($tmp_table);
+        $sth->execute();
+                
+        # заполняем временную таблицу по условиям задачи
+        $sth = $dbh->prepare("SELECT `created`,`int_id`,`str` FROM `message` WHERE `str` LIKE ?");
         $sth->execute("%$search_text%");
+        my @results;
+        while (my $row = $sth->fetchrow_hashref) {
+                        
+        }
 
+        # получение данных для вьюшки
+        $sth = $dbh->prepare("SELECT `str` FROM `lego` ORDER BY `int_id` DESC, `created` DESC");
+        $sth->execute();
         my @results;
         while (my $row = $sth->fetchrow_hashref) {
             push @results, $row;
         }
+
+
+        # убираем временную таблицу
+        $sth = $dbh->prepare("DROP TABLE `lego`");
+        $sth->execute();
 
         # TODO: переделать на анализ count()
         ## 100 !
@@ -45,14 +71,14 @@ get '/' => sub {
         } else {
             $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Info', content => "Исполнено" }]);
         }
-    } else {
+    } else { # отображение чистой формы запроса
         $c->render(template => 'index');
     }
 
-    # debug
+    # для отладки в случае ошибок - debug
     # Просмотр сгенерированного содержимого
     my $rendered_content = $c->rendered;
-    # Вывод сгенерированного содержимого в консоль
+    # Вывод сгенерированного содержимого
     $c->app->log->debug($rendered_content);
 
 };
