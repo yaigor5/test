@@ -123,19 +123,20 @@ __DATA__
         <% } %>
     </div>
 
-    <% if (stash('messages')) { %>
-        <% foreach my $message (@{stash('messages')}) { %>
+    <!--<% if (stash('messages')) { %>-->
+        <!--<% foreach my $message (@{stash('messages')}) { %>-->
             <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
                 <div class="toast-header <%= $message->{type} %> text-white">
                     <strong class="me-auto"><%= $message->{title} %></strong>
                     <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
                 <div class="toast-body">
+                    test
                     <%= $message->{content} %>
                 </div>
             </div>
-        <% } %>
-    <% } %>                   
+        <!--<% } %>-->
+    <!--<% } %>-->
 
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"></script>
