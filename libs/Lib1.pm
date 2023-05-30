@@ -102,7 +102,7 @@ sub check_table_exists {
     # 2. Возвращает результат выполнения [0|1].
 
     my ($dbh, $table_name) = @_;
-    my $sth = $dbh->do("SELECT count(*) FROM `information_schema`.`tables` WHERE `table_name`='".$table_name."'");
+    my $sth = $dbh->prepare("SELECT count(*) FROM `information_schema`.`tables` WHERE `table_name`='".$table_name."'");
     $sth->execute();
     return $sth->fetchrow_array;
 }
