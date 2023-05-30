@@ -35,9 +35,12 @@ get '/' => sub {
             push @results, $row;
         }
 
+        # TODO: переделать на анализ count()
         ## 100 !
-        if (@results > 2) {
-            $c->render(template => 'index', messages => [{ type => 'bg-warning', title => 'Warning', content => 'Превышено количество результатов' }]);
+        my $max_elements = 2;
+        if (@results > $max_elements) {
+            my @results_slice = @results[0..$max_elements];
+            $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', title => 'Warning', content => 'Превышено количество результатов' }]);
         } else {
             $c->render(template => 'index', results => \@results);
         }
