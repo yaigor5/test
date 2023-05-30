@@ -1,17 +1,7 @@
 package Lib1;
 
-our $VERSION = '1.0';
+our $VERSION = '1.2';
 our $CREATED_DATE = '2023-05-26';
-
-#our(@EXPORT, @EXPORT_OK, %EXPORT_TAGS);
-#BEGIN { 
-#	unshift(@INC, 'libs');
-#	use Exporter ();
-#	@EXPORT = qw(
-#		connect_to_database
-#	);
-#	%EXPORT_TAGS = ( FIELDS => [ @EXPORT ] );
-#}
 
 use strict;
 use warnings;
@@ -338,6 +328,11 @@ sub log_parser {
 
 }
 
+=head1 DESCRIPTION
+
+Lib1 - это модуль Perl, который предоставляет функции для подключения к базе данных, проверки и создания структуры таблицы и разбора файлов журнала.
+
+=cut
 
 
 1;
