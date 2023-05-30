@@ -224,7 +224,9 @@ sub log_line_parser {
     my $dt=DateTime::Format::MySQL->parse_datetime("$fields[0] $fields[1]");
     $log_data{created} = DateTime::Format::MySQL->format_datetime($dt); # = timestamp строки лога
     $log_data{int_id} = $fields[2]; # = внутренний id сообщения
-    $log_data{str} = join(' ', @fields[2..$#fields]); # = строка лога (без временной метки)
+    #$log_data{str} = join(' ', @fields[2..$#fields]); # = строка лога (без временной метки)
+    for (@fields) { $log_data{str}.=$_." "; }
+    $log_data{str} = trim($log_data{str}); # = строка лога (без временной метки)
     $log_data{tbl}='log'; # - определено условием
 
     # обработка флага в строке
