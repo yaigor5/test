@@ -115,13 +115,6 @@ get '/' => sub {
         $c->render(template => 'index');
     }
 
-    if ($debug) {
-        # для отладки в случае ошибок - вывод на экран
-        # просмотр сгенерированного содержимого
-        my $rendered_content = $c->rendered;
-        # вывод сгенерированного содержимого
-        $c->app->log->debug($rendered_content);
-    }
 };
 
 
