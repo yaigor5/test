@@ -90,21 +90,15 @@ get '/' => sub {
         my $lego_count = $dbh->selectrow_array("SELECT count(`int_id`) FROM `lego`");
 
         my @toast_params;
-        if ($lego_count>$max_elements) { # превышение указанного во вводных данных (секция [html] конфига)
+        if ($lego_count>$max_elements) { # превышение указанного количества строк - во вводных данных (секция [html] конфига)
             @toast_params = [{
                 title    => 'Предупреждение',
                 text     => "Превышено количество полученных строк. Выведено ".$max_elements." строк из ".$lego_count.".",
                 type     => 'bg-warning',
                 autohide => '0'
-            },
-            {
-                title    => 'Информация',
-                text     => "Исполнено. ".$lego_count." строк.",
-                type     => 'bg-info',
-                autohide => '1'
             }];
             $c->render(debug => $debug, template => 'index', results => \@results, , messages => @toast_params);
-        } else {
+        } else { # без превышения указанного количества строк
             @toast_params = [{
                 title    => 'Информация',
                 text     => "Исполнено. ".$lego_count." строк.",
@@ -113,6 +107,7 @@ get '/' => sub {
             }];
             $c->render(debug => $debug, template => 'index', results => \@results, messages => @toast_params);
         }
+        # тосты не стекируются - при необходимости требуется доработка
 
         # убираем временную таблицу
         $sth = $dbh->prepare("DROP TABLE `lego`");
