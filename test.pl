@@ -68,7 +68,7 @@ get '/' => sub {
         }
 
         # получение данных для вьюшки
-        $sth = $dbh->prepare("SELECT `str` FROM `lego` ORDER BY `int_id` DESC, `created` DESC LIMIT ".$max_elements);
+        $sth = $dbh->prepare("SELECT `created`,`int_id`,`str` FROM `lego` ORDER BY `int_id` DESC, `created` DESC LIMIT ".$max_elements);
         $sth->execute();
         my @results;
         while (my $row = $sth->fetchrow_hashref) {
