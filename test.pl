@@ -6,7 +6,6 @@ use lib "$RealBin/libs";
 use Lib1;
 use utf8;
 use Mojolicious::Lite;
-use HTML::Entities;
 $|=1; # запрещаем буферизацию вывода
 
 ## Инициализация
@@ -82,7 +81,7 @@ get '/' => sub {
         my @results;
         while (my $row = $sth->fetchrow_hashref) {
             # выделение искомого - TODO: доработка требуется
-            $row->{'str'} =~ s/($search_text)/encode_entities('<span class="highlight">$1<\/span>')/gei;
+            #$row->{'str'} =~ s/($search_text)/<span class="highlight">$1<\/span>/gi;
             
             # занесение в стек для вывода
             push @results, $row;
@@ -99,7 +98,7 @@ get '/' => sub {
                 type     => 'bg-warning',
                 autohide => '0'
             }];
-            $c->render(debug => $debug, template => 'index', results => \@results, , messages => @toast_params);
+            $c->render(debug => $debug, search_text => $search_text, template => 'index', results => \@results, , messages => @toast_params);
         } else { # без превышения указанного количества строк
             @toast_params = [{
                 title    => 'Информация',
@@ -107,7 +106,7 @@ get '/' => sub {
                 type     => 'bg-info',
                 autohide => '1'
             }];
-            $c->render(debug => $debug, template => 'index', results => \@results, messages => @toast_params);
+            $c->render(debug => $debug, search_text => $search_text, template => 'index', results => \@results, messages => @toast_params);
         }
         # тосты не стекируются - при необходимости требуется доработка
 
@@ -182,7 +181,7 @@ __DATA__
                                         <td><%= $row->{created} %></td>
                                         <td><%= $row->{int_id} %></td>
                                     <% } %>
-                                    <td><%= $row->{str} %></td>
+                                    <td><%= $row->{str} =~ s/(stash('search_text'))/<span class="highlight">$1<\/span>/gi; %></td>
                                 </tr>
                             <% } %>
                         </tbody>
