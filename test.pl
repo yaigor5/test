@@ -10,7 +10,7 @@ $|=1; ## запрещаем буферизацию вывода
 
 ## Инициализация
 my %hh = view_config();
-my $max_elements = $hh->{max};
+my $max_elements = $hh{'max'};
 
 
 ## init DB
