@@ -209,6 +209,25 @@ __DATA__
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </div>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Инициализация тостов
+            var toasts = document.querySelectorAll('.toast');
+            var toastElements = Array.prototype.slice.call(toasts);
+            var toastOptions = {
+                autohide: true,
+                delay: 3000
+            };
+            var toastInstances = toastElements.map(function(toastElement) {
+                return new bootstrap.Toast(toastElement, toastOptions);
+            });
+
+            // Активация показа тостов
+            toastInstances.forEach(function(toastInstance) {
+                toastInstance.show();
+            });
+        });
+    </script>
     
 </body>
 </html>
