@@ -6,29 +6,30 @@ use lib "$RealBin/libs";
 use Lib1;
 use utf8;
 use Mojolicious::Lite;
-$|=1; ## запрещаем буферизацию вывода
+$|=1; # запрещаем буферизацию вывода
 
 ## Инициализация
-my %hh = Lib1::view_config();
+# передача вводных параметров по вьюшке
+my %hh = Lib1::html_config();
 my $max_elements = $hh{'max'};
 my $debug = $hh{'debug'};
 
-
-## init DB
+# init DB
 my $dbh=Lib1::connect_to_database();
-## обеспечиваем структуру таблиц
+# обеспечиваем структуру таблиц
 Lib1::check_and_prepare_sql_structure();
-## парсер - разовый запуск при отсутствии ротации лога - TODO: вывод сообщений во вьюшку в виде тостов
+# парсер - разовый запуск при отсутствии ротации лога - TODO: вывод технических сообщений во вьюшку в виде тостов
 Lib1::log_parser();
 
 # установка настроек для поддержки UTF-8
 plugin 'Charset' => {charset => 'UTF-8'};
 
 ## Вьюшка
-## вывод основного содержимого на экран
+# вывод основного содержимого на экран + передача сообщений тостами
 get '/' => sub {
     my $c = shift;
 
+    # вводные из формы
     my $search_text = $c->param('search_text');
 
     if ($search_text) { # введены данные для поиска
@@ -89,12 +90,18 @@ get '/' => sub {
         my $lego_count = $dbh->selectrow_array("SELECT count(`int_id`) FROM `lego`");
 
         my @toast_params;
-        if ($lego_count>$max_elements) {
+        if ($lego_count>$max_elements) { # превышение указанного во вводных данных (секция [html] конфига)
             @toast_params = [{
                 title    => 'Предупреждение',
                 text     => "Превышено количество полученных строк. Выведено ".$max_elements." строк из ".$lego_count.".",
                 type     => 'bg-warning',
                 autohide => '0'
+            },
+            {
+                title    => 'Информация',
+                text     => "Исполнено. ".$lego_count." строк.",
+                type     => 'bg-info',
+                autohide => '1'
             }];
             $c->render(debug => $debug, template => 'index', results => \@results, , messages => @toast_params);
         } else {
@@ -117,10 +124,8 @@ get '/' => sub {
 
 };
 
-
 ## запуск mojo
 app->start;
-
 
 __DATA__
 
@@ -160,7 +165,6 @@ __DATA__
                 </form>
             </div>
         </div>
-
         <% if (stash('results')) { %>
             <div class="row">
                 <div class="col">
@@ -192,7 +196,6 @@ __DATA__
     </div>
 
     <div class="container">
-
         <% if (stash('messages')) { %>
             <% foreach my $message (@{stash('messages')}) { %>
                 <div class="toast fade toast-fixed" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$message->{autohide}) { %>data-autohide="false"<% } %>>
@@ -226,7 +229,6 @@ __DATA__
                 }
                 return new bootstrap.Toast(toastElement, toastOptions);
             });
-
             // требуемая ручная активация показа тостов
             toastInstances.forEach(function(toastInstance) {
                 toastInstance._element.classList.add('toast-top-right');
