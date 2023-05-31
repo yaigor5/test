@@ -213,7 +213,7 @@ __DATA__
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             // получаем JSON-строку с параметрами
-            var jsonParams = '<%= $json_params %>';
+            var jsonParams = '<%= Mojo::JSON::encode_json($json_params) %>';
 
             // парсим JSON-строку и получаем объект с параметрами
             var toastParams = JSON.parse(jsonParams);
