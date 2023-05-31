@@ -89,9 +89,9 @@ get '/' => sub {
         my $lego_count = $dbh->selectrow_array("SELECT count(`int_id`) FROM `lego`");
 
         if ($lego_count>$max_elements) {
-            $c->render(debug => $debug, template => 'index', results => \@results, messages => [{ type => 'bg-warning', autohide => '0', title => 'Предупреждение', content => "Превышено количество результатов = ".$max_elements }]);
+            $c->render(debug => $debug, template => 'index', results => \@results, messages => [{ type => 'bg-warning', autohide => '0', title => 'Предупреждение', content => "Превышено количество полученных строк. Выведено ".$max_elements." строк из ".$lego_count."." }]);
         } else {
-            $c->render(debug => $debug, template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Информация', content => "Исполнено. $lego_count строк." }]);
+            $c->render(debug => $debug, template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Информация', content => "Исполнено. ".$lego_count." строк." }]);
         }
 
         # убираем временную таблицу
