@@ -7,6 +7,7 @@ use Lib1;
 use utf8;
 use Mojolicious::Lite;
 use JSON;
+use Mojo::Util;
 $|=1; ## запрещаем буферизацию вывода
 
 ## Инициализация
@@ -210,7 +211,7 @@ __DATA__
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             // получаем JSON-строку с параметрами
-            var jsonParams = '<%= $json_params %>';
+            var jsonParams = '<%= Mojo::Util::htl_unescape($json_params) %>';
 
             // парсим JSON-строку и получаем объект с параметрами
             var toastParams = JSON.parse(jsonParams.replace(/&quot;/g,'"'));
@@ -218,8 +219,8 @@ __DATA__
             // показ toast
             document.addEventListener('DOMContentLoaded', function() {
                 var toastElement = document.getElementById('toastElement').textContent;
-                var toastTitle = document.getElementById('toastTitle').textContent;
-                var toastMessage = document.getElementById('toastMessage').textContent;
+                var toastTitle = document.getElementById('toastTitle').innerHTML;
+                var toastMessage = document.getElementById('toastMessage').innerHTML;
 
                 toastTitle.innerText = toastParams.title;
                 toastMessage.innerText = toastParams.message;
