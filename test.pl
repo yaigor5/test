@@ -222,7 +222,7 @@ __DATA__
             var toasts = document.querySelectorAll('.toast');
             var toastElements = Array.prototype.slice.call(toasts);
             var toastOptions = {
-                autohide: true,
+                //autohide: true,
                 delay: 3000
             };
             var toastInstances = toastElements.map(function(toastElement) {
