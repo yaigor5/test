@@ -91,7 +91,7 @@ get '/' => sub {
         if ($lego_count>$max_elements) {
             $c->render(debug => $debug, template => 'index', results => \@results, messages => [{ type => 'bg-warning', autohide => '0', title => 'Предупреждение', content => "Превышено количество результатов = ".$max_elements }]);
         } else {
-            $c->render(debug => $debug, template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Информация', content => "Исполнено" }]);
+            $c->render(debug => $debug, template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Информация', content => "Исполнено. $lego_count строк." }]);
         }
 
         # убираем временную таблицу
@@ -192,7 +192,7 @@ __DATA__
 
     <% if (stash('messages')) { %>
         <% foreach my $message (@{stash('messages')}) { %>
-            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="6000" <% if (!$message->{autohide}) { %>data-autohide="false"<% } %>>
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$message->{autohide}) { %>data-autohide="false"<% } %>>
                 <div class="toast-header <%= $message->{type} %> text-white">
                     <strong class="me-auto"><%= $message->{title} %></strong>
                     <small>Только что</small>
