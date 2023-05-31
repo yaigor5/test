@@ -79,10 +79,11 @@ get '/' => sub {
         }
 
         # проверка условия по максимальному количеству
-        $sth = $dbh->prepare("SELECT count(`int_id`) as `cnt` FROM `lego`");
-        $sth->execute();
-        my $row2 = $sth->fetchrow_array;
-        if ($row2['cnt']>$max_elements) {
+        $count = $dbh->selectrow_array("SELECT count(`int_id`) FROM `lego`");
+
+        print $count."<br>\n"; exit; 
+
+        if ($row2[0]>$max_elements) {
             $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', autohide => '0', title => 'Warning', content => "Превышено количество результатов = ".$max_elements }]);
         } else {
             $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Info', content => "Исполнено" }]);
