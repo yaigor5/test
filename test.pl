@@ -150,7 +150,7 @@ __DATA__
 </head>
 <body>
 <% 
-if (stash('debug')) { $debug=stash('debug') }
+if (stash('debug')) { my $debug=stash('debug') }
 %> 
 
 
