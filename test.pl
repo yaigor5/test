@@ -81,7 +81,7 @@ get '/' => sub {
         my @results;
         while (my $row = $sth->fetchrow_hashref) {
             # выделение искомого - TODO: доработка требуется
-            $row =~ s/($search_text)/<%= tag 'span', class => "highlight", content => $1 %><\/span>/gi;
+            $row{str} =~ s/($search_text)/<%= tag 'span', class => "highlight", content => $1 %><\/span>/gi;
             # занесение в стек для вывода
             push @results, $row;
         }
