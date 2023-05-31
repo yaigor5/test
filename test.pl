@@ -9,7 +9,7 @@ use Mojolicious::Lite;
 $|=1; ## запрещаем буферизацию вывода
 
 ## Инициализация
-my $max_elements = 2;
+my $max_elements = 10;
 
 ## init DB
 my $dbh=Lib1::connect_to_database();
