@@ -94,7 +94,7 @@ get '/' => sub {
                 title    => 'Предупреждение',
                 text  => "Превышено количество полученных строк. Выведено ".$max_elements." строк из ".$lego_count.".",
                 type     => 'bg-warning',
-                autohide => 'false'
+                autohide => '0'
             }];
             $c->render(debug => $debug, template => 'index', results => \@results, , messages => @toast_params);
         } else {
@@ -102,7 +102,7 @@ get '/' => sub {
                 title    => 'Информация',
                 text  => "Исполнено. ".$lego_count." строк.",
                 type     => 'bg-info',
-                autohide => 'true'
+                autohide => '1'
             }];
             $c->render(debug => $debug, template => 'index', results => \@results, messages => @toast_params);
         }
@@ -148,7 +148,7 @@ __DATA__
         }
         .toast-top-right {
             position: absolute;
-            top: 20px;
+            top: 120px;
             right: 20px;
             width: 300px;
             z-index: 9999;
@@ -203,7 +203,7 @@ __DATA__
         <% if (stash('messages')) { %>
             <% foreach my $message (@{stash('messages')}) { %>
                 <div class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$message->{autohide}) { %>data-autohide="false"<% } %>>
-                    <div class="toast-header" <%= $message->{type} %>>
+                    <div class="toast-header <%= $message->{type} %>">
                         <strong class="me-auto"><%= $message->{title} %></strong>
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
                     </div>
