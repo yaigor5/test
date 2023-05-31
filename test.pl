@@ -18,7 +18,7 @@ my $debug = $hh{'debug'};
 my $dbh=Lib1::connect_to_database();
 # обеспечиваем структуру таблиц
 Lib1::check_and_prepare_sql_structure();
-# парсер - разовый запуск при отсутствии ротации лога - TODO: вывод технических сообщений во вьюшку в виде тостов
+# парсер - разовый запуск при отсутствии ротации лога - первичный парсинг (регулируется флагом в секции [flag] конфига)
 Lib1::log_parser();
 
 # установка настроек для поддержки UTF-8
@@ -80,8 +80,8 @@ get '/' => sub {
         $sth->execute();
         my @results;
         while (my $row = $sth->fetchrow_hashref) {
-            # выделение искомого
-            $row =~ s/($search_text)/<span class="highlight">$1<\/span>/gi;
+            # выделение искомого - TODO: доработка требуется
+            $row =~ s/($search_text)/<span class="highlight"><%= content $1 %><\/span>/gi;
             # занесение в стек для вывода
             push @results, $row;
         }
