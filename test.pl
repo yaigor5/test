@@ -101,8 +101,8 @@ get '/' => sub {
                 autohide => 'false'
             };
             # Преобразуем данные в UTF-8
-            utf8::encode($toast_params->{title});
-            utf8::encode($toast_params->{message});
+            #utf8::encode($toast_params->{title});
+            #utf8::encode($toast_params->{message});
             $c->render(debug => $debug, template => 'index', results => \@results, json_params => decode('UTF-8', encode_json($toast_params)));
         } else {
             $toast_params = {
@@ -112,8 +112,8 @@ get '/' => sub {
                 autohide => 'true'
             };
             # Преобразуем данные в UTF-8
-            utf8::encode($toast_params->{title});
-            utf8::encode($toast_params->{message});
+            #utf8::encode($toast_params->{title});
+            #utf8::encode($toast_params->{message});
             $c->render(debug => $debug, template => 'index', results => \@results, json_params => decode('UTF-8', encode_json($toast_params)));
         }
 
