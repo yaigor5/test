@@ -82,7 +82,7 @@ get '/' => sub {
         my @results;
         while (my $row = $sth->fetchrow_hashref) {
             # выделение искомого - TODO: доработка требуется
-            $row->{'str'} =~ s/($search_text)/html_unescape(<span class="highlight">$1<\/span>)/gei;
+            $row->{'str'} =~ s/($search_text)/html_unescape('<span class="highlight">$1<\/span>')/gei;
             
             # занесение в стек для вывода
             push @results, $row;
