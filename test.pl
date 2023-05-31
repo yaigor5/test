@@ -29,9 +29,9 @@ get '/' => sub {
     my $search_text = $c->param('search_text');
 
     if ($search_text) { # введены данные для поиска
-        # создаем временную таблицу 'lego'
+        # создаем временную таблицу 'lego' TEMPORARY
         my $tmp_table = "
-            CREATE TEMPORARY TABLE `lego` (
+            CREATE  TABLE `lego` (
                 `created` timestamp NOT NULL,
                 `int_id` char(16) NOT NULL,
                 `str` text NOT NULL,
@@ -80,6 +80,7 @@ get '/' => sub {
 
         # проверка условия по максимальному количеству
         my $count = $dbh->selectrow_array("SELECT count(`int_id`) FROM `lego`");
+
 
         print $count."<br>\n"; exit; 
 
