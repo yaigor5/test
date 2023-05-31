@@ -223,7 +223,7 @@ __DATA__
             var toastElements = Array.prototype.slice.call(toasts);
             var toastOptions = {
                 //autohide: true,
-                delay: 3000
+                //delay: 3000
             };
             var toastInstances = toastElements.map(function(toastElement) {
                 return new bootstrap.Toast(toastElement, toastOptions);
