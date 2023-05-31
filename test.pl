@@ -146,6 +146,11 @@ __DATA__
         .highlight {
             background-color: yellow;
         }
+        .toast-top-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
     </style>
 </head>
 <body>
@@ -224,6 +229,7 @@ __DATA__
 
             // Активация показа тостов
             toastInstances.forEach(function(toastInstance) {
+                toastInstance._element.classList.add('toast-top-right');
                 toastInstance.show();
             });
         });
