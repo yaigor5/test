@@ -80,7 +80,7 @@ get '/' => sub {
         $sth->execute();
         my @results;
         while (my $row = $sth->fetchrow_hashref) {
-            # выделение искомого - TODO: доработка требуется
+            # выделение искомого - TODO: доработка требуется для unescape
             #$row->{'str'} =~ s/($search_text)/<span class="highlight">$1<\/span>/gi;
             
             # занесение в стек для вывода
@@ -181,7 +181,7 @@ __DATA__
                                         <td><%= $row->{created} %></td>
                                         <td><%= $row->{int_id} %></td>
                                     <% } %>
-                                    <td><%= $row->{str} =~ s/(stash('search_text'))/<span class="highlight">$1<\/span>/gi; %></td>
+                                    <td><%= $row->{str} %></td>
                                 </tr>
                             <% } %>
                         </tbody>
