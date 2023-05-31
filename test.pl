@@ -96,7 +96,7 @@ get '/' => sub {
                 type     => 'bg-warning',
                 autohide => '0'
             }];
-            $c->render(debug => $debug, template => 'index', results => \@results, , messages => \@toast_params);
+            $c->render(debug => $debug, template => 'index', results => \@results, , messages => @toast_params);
         } else {
             @toast_params = [{
                 title    => 'Информация',
@@ -104,7 +104,7 @@ get '/' => sub {
                 type     => 'bg-info',
                 autohide => '1'
             }];
-            $c->render(debug => $debug, template => 'index', results => \@results, messages => \@toast_params);
+            $c->render(debug => $debug, template => 'index', results => \@results, messages => @toast_params);
         }
 
         # убираем временную таблицу
@@ -211,7 +211,7 @@ __DATA__
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Инициализация тостов
+            // инициализация тостов
             var toasts = document.querySelectorAll('.toast');
             var toastElements = Array.prototype.slice.call(toasts);
             var toastOptions = {
@@ -222,7 +222,7 @@ __DATA__
                 return new bootstrap.Toast(toastElement, toastOptions);
             });
 
-            // Активация показа тостов
+            // требуемая ручная активация показа тостов
             toastInstances.forEach(function(toastInstance) {
                 toastInstance._element.classList.add('toast-top-right');
                 toastInstance.show();
