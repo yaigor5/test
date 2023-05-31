@@ -202,8 +202,8 @@ __DATA__
     </div>
 
     <div class="container">
-        <% my $json = Mojo::JSON->new %>
-        <% my $json_params_hash = $json->decode($json_params) %>
+        <% my $json_params_hash = Mojo::JSON::from_json($json_params) %>
+
         <div id="toastElement" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$json_params_hash->{autohide}) { %>data-autohide="false"<% } %>>
             <div class="toast-header">
                 <strong class="me-auto" id="toastTitle"><%= $json_params_hash->{title} %></strong>
