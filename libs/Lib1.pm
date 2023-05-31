@@ -29,7 +29,7 @@ sub view_config {
     my %tt;
     # считывание конфига
     my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
-    $tt{max} = $config->val('html', 'max_elements');
+    $tt->{max} = $config->val('html', 'max_elements');
 
     return $tt;
 }
