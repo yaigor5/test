@@ -9,7 +9,7 @@ use Mojolicious::Lite;
 $|=1; ## запрещаем буферизацию вывода
 
 ## Инициализация
-my %hh = view_config();
+my %hh = Lib1::view_config();
 my $max_elements = $hh{'max'};
 
 
