@@ -83,8 +83,7 @@ get '/' => sub {
             # выделение искомого - TODO: доработка требуется
             #$row =~ s/($search_text)/<%= tag 'span', class => "highlight", content => $1 %><\/span>/gi;
             
-            use Data::Dump qw(dump);
-            print dump($row)."\n";
+            print dump($row{'str'})."\n";
             exit;
 
             # занесение в стек для вывода
