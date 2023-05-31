@@ -203,7 +203,7 @@ __DATA__
     </div>
 
     <div class="container">
-        <% print dump($json_params) %>
+        <% print CORE::dump($json_params) %>
 
 
         <% my $json_params_hash = Mojo::JSON::decode_json($json_params) %>
