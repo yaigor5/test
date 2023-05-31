@@ -11,6 +11,29 @@ use Text::ParseWords;
 use DateTime::Format::MySQL;
 use Data::Dump qw(dump);
 
+# процедура для получения парметров для вьюшки
+sub view_config {
+    # Описание:
+    # Функция получает данные из секции [html] в 'config.ini'.
+    #
+    # Входные параметры:
+    # Отсутствуют.
+    #
+    # Возвращаемое значение:
+    # Хеш с параметрами.
+    #
+    # Действие функции:
+    # 1. Считывание конфигурационного файла 'config.ini'.
+    # 2. Получение параметров из конфигурационного файла.
+
+    my %tt;
+    # считывание конфига
+    my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
+    $tt{max} = $config->val('html', 'max_elements');
+
+    return $tt;
+}
+
 # процедура для подключения к БД
 sub connect_to_database {
     # Описание:
