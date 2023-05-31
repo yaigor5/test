@@ -194,17 +194,17 @@ __DATA__
     <div class="container">
 
         <% if (stash('messages')) { %>
-        <% foreach my $message (@{stash('messages')}) { %>
-            <div class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$message->{autohide}) { %>data-autohide="false"<% } %>>
-                <div class="toast-header" <%= $message->{type} %>>
-                    <strong class="me-auto"><%= $message->{title} %></strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+            <% foreach my $message (@{stash('messages')}) { %>
+                <div class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$message->{autohide}) { %>data-autohide="false"<% } %>>
+                    <div class="toast-header" <%= $message->{type} %>>
+                        <strong class="me-auto"><%= $message->{title} %></strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+                    </div>
+                    <div class="toast-body">
+                        <%= $message->{content} %>
+                    </div>
                 </div>
-                <div class="toast-body">
-                    <%= $message->{content} %>
-                </div>
-
-        <% } %>
+            <% } %>
         <% } %>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </div>
