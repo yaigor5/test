@@ -9,14 +9,16 @@ use Mojolicious::Lite;
 $|=1; ## запрещаем буферизацию вывода
 
 ## Инициализация
+my $max_elements = 2;
+
 ## init DB
 my $dbh=Lib1::connect_to_database();
 ## обеспечиваем структуру таблиц
 Lib1::check_and_prepare_sql_structure();
-## Парсер - разовый запуск при отсутствии ротации лога - TODO: вывод сообщений во вьюшку в виде тостов
+## парсер - разовый запуск при отсутствии ротации лога - TODO: вывод сообщений во вьюшку в виде тостов
 Lib1::log_parser();
 
-# Установка настроек для поддержки UTF-8
+# установка настроек для поддержки UTF-8
 plugin 'Charset' => {charset => 'UTF-8'};
 
 ## Вьюшка
@@ -27,7 +29,7 @@ get '/' => sub {
     my $search_text = $c->param('search_text');
 
     if ($search_text) { # введены данные для поиска
-        # создаем временную таблицу
+        # создаем временную таблицу 'lego'
         my $tmp_table = "
             CREATE TEMPORARY TABLE `lego` (
                 `created` timestamp NOT NULL,
@@ -40,45 +42,64 @@ get '/' => sub {
         my $sth = $dbh->prepare($tmp_table);
         $sth->execute();
                 
-        # заполняем временную таблицу по условиям задачи
+        # подготовка выражения для вставки во временную таблицу 'lego'
+        my $insert_sth = $dbh->prepare("INSERT INTO `lego` (`created`,`int_id`,`str`) VALUES (?,?,?)");
+
+        # заполняем временную таблицу по условиям задачи - из двух таблиц (выбран вариант не через массив или хэш)
         $sth = $dbh->prepare("SELECT `created`,`int_id`,`str` FROM `message` WHERE `str` LIKE ?");
         $sth->execute("%$search_text%");
-        my @results;
         while (my $row = $sth->fetchrow_hashref) {
-                        
+            # получаем данные из SELECT
+            my $created = $row->{created};
+            my $int_id = $row->{int_id};
+            my $str = $row->{str};
+            # вставляем данные во временную таблицу 'lego'
+            $insert_sth->execute($created, $int_id, $str);
+        }
+        $sth = $dbh->prepare("SELECT `created`,`int_id`,`str` FROM `log` WHERE `address` LIKE ?");
+        $sth->execute("%$search_text%");
+        while (my $row = $sth->fetchrow_hashref) {
+            # получаем данные из SELECT
+            my $created = $row->{created};
+            my $int_id = $row->{int_id};
+            my $str = $row->{str};
+            # вставляем данные во временную таблицу 'lego'
+            $insert_sth->execute($created, $int_id, $str);
         }
 
         # получение данных для вьюшки
-        $sth = $dbh->prepare("SELECT `str` FROM `lego` ORDER BY `int_id` DESC, `created` DESC");
+        $sth = $dbh->prepare("SELECT `str` FROM `lego` ORDER BY `int_id` DESC, `created` DESC LIMIT ".$max_elements);
         $sth->execute();
         my @results;
         while (my $row = $sth->fetchrow_hashref) {
+            # выделение искомого
+            $row =~ s/($search_text)/<span class="highlight">$1<\/span>/gi;
+            # занесение в стек для вывода
             push @results, $row;
         }
 
+        # проверка условия по максимальному количеству
+        $sth = $dbh->prepare("SELECT count(`int_id`) as `cnt` FROM `lego`");
+        $sth->execute();
+        my $row2 = $sth->fetchrow_array;
+        if ($row2['cnt']>$max_elements) {
+            $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', autohide => '0', title => 'Warning', content => "Превышено количество результатов = ".$max_elements }]);
+        } else {
+            $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Info', content => "Исполнено" }]);
+        }
 
         # убираем временную таблицу
         $sth = $dbh->prepare("DROP TABLE `lego`");
         $sth->execute();
 
-        # TODO: переделать на анализ count()
-        ## 100 !
-        my $max_elements = 2;
-        $max_elements--; # 0..max
-        if (@results >= $max_elements) {
-            my @results_slice = @results[0..$max_elements];
-            $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', autohide => '0', title => 'Warning', content => "Превышено количество результатов = ".($max_elements+1) }]);
-        } else {
-            $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Info', content => "Исполнено" }]);
-        }
     } else { # отображение чистой формы запроса
         $c->render(template => 'index');
     }
 
-    # для отладки в случае ошибок - debug
-    # Просмотр сгенерированного содержимого
+    # для отладки в случае ошибок - вывод на экран
+    # просмотр сгенерированного содержимого
     my $rendered_content = $c->rendered;
-    # Вывод сгенерированного содержимого
+    # вывод сгенерированного содержимого
     $c->app->log->debug($rendered_content);
 
 };
@@ -106,6 +127,9 @@ __DATA__
     <style>
         * { 
             font-size: 12px; 
+        }
+        .highlight {
+            background-color: yellow;
         }
         .toast {
             position: absolute;
