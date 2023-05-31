@@ -83,8 +83,8 @@ get '/' => sub {
 
         print $count."<br>\n"; exit; 
 
-        if ($row2[0]>$max_elements) {
-            $c->render(template => 'index', results => \@results_slice, messages => [{ type => 'bg-warning', autohide => '0', title => 'Warning', content => "Превышено количество результатов = ".$max_elements }]);
+        if ($count>$max_elements) {
+            $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-warning', autohide => '0', title => 'Warning', content => "Превышено количество результатов = ".$max_elements }]);
         } else {
             $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Info', content => "Исполнено" }]);
         }
