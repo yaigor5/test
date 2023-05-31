@@ -7,7 +7,7 @@ use Lib1;
 use utf8;
 use Mojolicious::Lite;
 use JSON;
-use Mojo::Util qw(decode encode_json);
+use Mojo::Util;
 use Encode;
 binmode STDOUT, ":utf8";
 $|=1; ## запрещаем буферизацию вывода
