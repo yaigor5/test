@@ -199,7 +199,7 @@ __DATA__
     </div>
 
     <div class="container">
-       <div id="toastElement" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$toast_params->{autohide}) { %>data-autohide="false"<% } %>>
+       <div id="toastElement" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <%= if (!$toast_params->{autohide}) { %>data-autohide="false"<% } %>>
             <div class="toast-header">
                 <strong class="me-auto" id="toastTitle"><%= $toast_params->{title} %></strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
@@ -211,10 +211,13 @@ __DATA__
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-            // Получаем параметры toast из Perl-переменной
-            var toastParams = JSON.parse('<%= $toast_params %>');
+            // получаем JSON-строку с параметрами
+            var jsonParams = '<%= $json_params %>';
 
-            // Показываем toast при загрузке страницы
+            // парсим JSON-строку и получаем объект с параметрами
+            var toastParams = JSON.parse(jsonParams);
+
+            // показ toast
             document.addEventListener('DOMContentLoaded', function() {
                 var toastElement = document.getElementById('toastElement');
                 var toastTitle = document.getElementById('toastTitle');
@@ -224,7 +227,7 @@ __DATA__
                 toastTitle.innerText = toastParams.title;
                 toastMessage.innerText = toastParams.message;
 
-                // Добавляем класс в зависимости от типа toast
+                // добавление класса в зависимости от типа toast
                 if (toastParams.type === 'success') {
                     toastElement.classList.add('toast-success');
                 } else if (toastParams.type === 'warning') {
@@ -233,7 +236,7 @@ __DATA__
                     toastElement.classList.add('toast-error');
                 }
 
-                // Активируем toast
+                // активизация toast
                 var toast = new bootstrap.Toast(toastElement);
                 toast.show();
             });
