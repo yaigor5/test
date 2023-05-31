@@ -149,6 +149,11 @@ __DATA__
     </style>
 </head>
 <body>
+<% 
+if (stash('debug')) { $debug=stash('debug') }
+%> 
+
+
     <div class="container mt-4 fs-6">
         <div class="row">
             <div class="col">
