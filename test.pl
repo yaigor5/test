@@ -96,7 +96,7 @@ get '/' => sub {
                 type     => 'bg-warning',
                 autohide => 'false'
             }];
-            $c->render(debug => $debug, template => 'index', results => \@results, , messages => \@toast_params);
+            $c->render(debug => $debug, template => 'index', results => \@results, , messages => @toast_params);
         } else {
             @toast_params = [{
                 title    => 'Информация',
@@ -104,7 +104,7 @@ get '/' => sub {
                 type     => 'bg-info',
                 autohide => 'true'
             }];
-            $c->render(debug => $debug, template => 'index', results => \@results, messages => \@toast_params);
+            $c->render(debug => $debug, template => 'index', results => \@results, messages => @toast_params);
         }
 
         # убираем временную таблицу
