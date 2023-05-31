@@ -9,7 +9,7 @@ use Mojolicious::Lite;
 use JSON;
 use Mojo::Util;
 use Encode;
-binmode STDOUT, ":utf8";
+#binmode STDOUT, ":utf8";
 $|=1; ## запрещаем буферизацию вывода
 
 ## Инициализация
@@ -142,7 +142,6 @@ app->start;
 __DATA__
 
 @@ index.html.ep
-% encoding 'UTF-8';
 <!DOCTYPE html>
 <html>
 <head>
