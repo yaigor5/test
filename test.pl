@@ -96,7 +96,7 @@ get '/' => sub {
                 title    => 'Предупреждение',
                 message  => "Превышено количество полученных строк. Выведено ".$max_elements." строк из ".$lego_count.".",
                 type     => 'warning',
-                autohide => '0'
+                autohide => 'false'
             };
             # Преобразуем данные в UTF-8
             utf8::encode($toast_params->{title});
@@ -107,7 +107,7 @@ get '/' => sub {
                 title    => 'Информация',
                 message  => "Исполнено. ".$lego_count." строк.",
                 type     => 'success',
-                autohide => '1'
+                autohide => 'true'
             };
             # Преобразуем данные в UTF-8
             utf8::encode($toast_params->{title});
