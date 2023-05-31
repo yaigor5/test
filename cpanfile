@@ -9,3 +9,4 @@ requires 'Text::ParseWords';
 requires 'DateTime::Format::MySQL';
 requires 'Data::Dump';
 requires 'Mojo::Template';
+requires 'Mojo::JSON';
