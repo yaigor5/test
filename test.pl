@@ -149,11 +149,6 @@ __DATA__
     </style>
 </head>
 <body>
-<% 
-if (stash('debug')) { my $debug=stash('debug') }
-%> 
-
-
     <div class="container mt-4 fs-6">
         <div class="row">
             <div class="col">
@@ -170,7 +165,7 @@ if (stash('debug')) { my $debug=stash('debug') }
             <div class="row">
                 <div class="col">
                     <table class="table">
-                        <% if ($debug) { %>
+                        <% if (stash('debug')) { %>
                             <thead>
                                 <tr>
                                     <th>created</th>
@@ -182,7 +177,7 @@ if (stash('debug')) { my $debug=stash('debug') }
                         <tbody>
                             <% foreach my $row (@{stash('results')}) { %>
                                 <tr>
-                                    <% if ($debug) { %>
+                                    <% if (stash('debug')) { %>
                                         <td><%= $row->{created} %></td>
                                         <td><%= $row->{int_id} %></td>
                                     <% } %>
