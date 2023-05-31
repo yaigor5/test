@@ -79,7 +79,7 @@ get '/' => sub {
         }
 
         # проверка условия по максимальному количеству
-        $count = $dbh->selectrow_array("SELECT count(`int_id`) FROM `lego`");
+        my $count = $dbh->selectrow_array("SELECT count(`int_id`) FROM `lego`");
 
         print $count."<br>\n"; exit; 
 
