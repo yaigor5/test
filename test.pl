@@ -211,7 +211,7 @@ __DATA__
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             // получаем JSON-строку с параметрами
-            var jsonParams = '<%= Mojo::Util::htl_unescape($json_params) %>';
+            var jsonParams = '<%= Mojo::Util::htl_unescape($json_params) %>'.replace(/&quot;/g, '"');
 
             // парсим JSON-строку и получаем объект с параметрами
             var toastParams = JSON.parse(jsonParams.replace(/&quot;/g,'"'));
@@ -219,8 +219,8 @@ __DATA__
             // показ toast
             document.addEventListener('DOMContentLoaded', function() {
                 var toastElement = document.getElementById('toastElement').textContent;
-                var toastTitle = document.getElementById('toastTitle').innerHTML;
-                var toastMessage = document.getElementById('toastMessage').innerHTML;
+                var toastTitle = document.getElementById('toastTitle').innerText;
+                var toastMessage = document.getElementById('toastMessage').innerText;
 
                 toastTitle.innerText = toastParams.title;
                 toastMessage.innerText = toastParams.message;
