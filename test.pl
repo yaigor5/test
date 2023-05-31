@@ -81,10 +81,12 @@ get '/' => sub {
         my @results;
         while (my $row = $sth->fetchrow_hashref) {
             # выделение искомого - TODO: доработка требуется
-            $row{str} =~ s/($search_text)/<%= tag 'span', class => "highlight", content => $1 %><\/span>/gi;
+            #$row =~ s/($search_text)/<%= tag 'span', class => "highlight", content => $1 %><\/span>/gi;
+            
+            use Data::Dump qw(dump);
             print dump($row)."\n";
             exit;
-            
+
             # занесение в стек для вывода
             push @results, $row;
         }
