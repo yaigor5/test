@@ -95,7 +95,7 @@ get '/' => sub {
                 message  => "Превышено количество полученных строк. Выведено ".$max_elements." строк из ".$lego_count.".",
                 type     => 'bg-warning',
                 autohide => 'false'
-            ]};
+            }];
             $c->render(debug => $debug, template => 'index', results => \@results, , messages => \@toast_params);
         } else {
             @toast_params = [{
@@ -103,7 +103,7 @@ get '/' => sub {
                 message  => "Исполнено. ".$lego_count." строк.",
                 type     => 'bg-info',
                 autohide => 'true'
-            ]};
+            }];
             $c->render(debug => $debug, template => 'index', results => \@results, messages => \@toast_params);
         }
 
