@@ -6,11 +6,6 @@ use lib "$RealBin/libs";
 use Lib1;
 use utf8;
 use Mojolicious::Lite;
-use JSON;
-use Mojo::Util;
-use Encode;
-use Data::Dump qw(dump);
-#binmode STDOUT, ":utf8";
 $|=1; ## запрещаем буферизацию вывода
 
 ## Инициализация
@@ -93,29 +88,23 @@ get '/' => sub {
         # проверка условия по максимальному количеству
         my $lego_count = $dbh->selectrow_array("SELECT count(`int_id`) FROM `lego`");
 
-        my $toast_params;
+        my @toast_params;
         if ($lego_count>$max_elements) {
-            $toast_params = {
+            @toast_params = [{
                 title    => 'Предупреждение',
                 message  => "Превышено количество полученных строк. Выведено ".$max_elements." строк из ".$lego_count.".",
-                type     => 'warning',
+                type     => 'bg-warning',
                 autohide => 'false'
-            };
-            # Преобразуем данные в UTF-8
-            #utf8::encode($toast_params->{title});
-            #utf8::encode($toast_params->{message});
-            $c->render(debug => $debug, template => 'index', results => \@results, json_params => decode('UTF-8', encode_json($toast_params)));
+            ]};
+            $c->render(debug => $debug, template => 'index', results => \@results, , messages => \@toast_params);
         } else {
-            $toast_params = {
+            @toast_params = [{
                 title    => 'Информация',
                 message  => "Исполнено. ".$lego_count." строк.",
-                type     => 'success',
+                type     => 'bg-info',
                 autohide => 'true'
-            };
-            # Преобразуем данные в UTF-8
-            #utf8::encode($toast_params->{title});
-            #utf8::encode($toast_params->{message});
-            $c->render(debug => $debug, template => 'index', results => \@results, json_params => decode('UTF-8', encode_json($toast_params)));
+            ]};
+            $c->render(debug => $debug, template => 'index', results => \@results, messages => \@toast_params);
         }
 
         # убираем временную таблицу
@@ -203,50 +192,21 @@ __DATA__
     </div>
 
     <div class="container">
-        <% print CORE::dump($json_params) %>
 
+        <% if (stash('messages')) { %>
+        <% foreach my $message (@{stash('messages')}) { %>
+            <div class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$message->{autohide}) { %>data-autohide="false"<% } %>>
+                <div class="toast-header" <%= $message->{type} %>>
+                    <strong class="me-auto"><%= $message->{title} %></strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+                </div>
+                <div class="toast-body">
+                    <%= $message->{content} %>
+                </div>
 
-        <% my $json_params_hash = Mojo::JSON::decode_json($json_params) %>
-
-        <div id="toastElement" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$json_params_hash->{autohide}) { %>data-autohide="false"<% } %>>
-            <div class="toast-header">
-                <strong class="me-auto" id="toastTitle"><%= $json_params_hash->{title} %></strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
-            </div>
-            <div class="toast-body" id="toastMessage"><%= $json_params_hash->{message} %></div>
-        </div>
-
+        <% } %>
+        <% } %>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-            // получаем JSON-строку с параметрами
-            var jsonParams = '<%= Mojo::JSON::encode_json($json_params) %>';
-
-            // парсим JSON-строку и получаем объект с параметрами
-            var toastParams = JSON.parse(jsonParams);
-
-            // показ toast
-            document.addEventListener('DOMContentLoaded', function() {
-                var toastElement = document.getElementById('toastElement').textContent;
-                var toastTitle = document.getElementById('toastTitle').innerText;
-                var toastMessage = document.getElementById('toastMessage').innerText;
-
-                toastTitle.innerText = toastParams.title;
-                toastMessage.innerText = toastParams.message;
-
-                // добавление класса в зависимости от типа toast
-                if (toastParams.type === 'success') {
-                    toastElement.classList.add('toast-success');
-                } else if (toastParams.type === 'warning') {
-                    toastElement.classList.add('toast-warning');
-                } else if (toastParams.type === 'error') {
-                    toastElement.classList.add('toast-error');
-                }
-
-                // активизация toast
-                var toast = new bootstrap.Toast(toastElement);
-                toast.show();
-            });
-        </script>
     </div>
 
     
