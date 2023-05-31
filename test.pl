@@ -6,7 +6,7 @@ use lib "$RealBin/libs";
 use Lib1;
 use utf8;
 use Mojolicious::Lite;
-use Mojo::JSON qw(encode_json);
+use JSON;
 $|=1; ## запрещаем буферизацию вывода
 
 ## Инициализация
@@ -97,7 +97,7 @@ get '/' => sub {
                 type     => 'warning',
                 autohide => '0'
             };
-            $c->render(debug => $debug, template => 'index', results => \@results, toast_params => $toast_params);
+            $c->render(debug => $debug, template => 'index', results => \@results, toast_params => to_json($toast_params));
         } else {
             $toast_params = {
                 title    => 'Информация',
@@ -105,7 +105,7 @@ get '/' => sub {
                 type     => 'success',
                 autohide => '1'
             };
-            $c->render(debug => $debug, template => 'index', results => \@results, toast_params => $toast_params);
+            $c->render(debug => $debug, template => 'index', results => \@results, toast_params => to_json($toast_params));
         }
 
         # убираем временную таблицу
@@ -206,7 +206,7 @@ __DATA__
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             // Получаем параметры toast из Perl-переменной
-            var toastParams = <%= to_json($toast_params) %>;
+            var toastParams = JSON.parse('<%= $toast_params %>');
 
             // Показываем toast при загрузке страницы
             document.addEventListener('DOMContentLoaded', function() {
