@@ -211,7 +211,7 @@ __DATA__
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             // получаем JSON-строку с параметрами
-            var jsonParams = '<%= Mojo::Util::htl_unescape($json_params) %>'.replace(/&quot;/g, '"');
+            var jsonParams = '<%= Mojo::Util::html_unescape($json_params) %>'.replace(/&quot;/g, '"');
 
             // парсим JSON-строку и получаем объект с параметрами
             var toastParams = JSON.parse(jsonParams.replace(/&quot;/g,'"'));
