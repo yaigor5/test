@@ -141,7 +141,7 @@ __DATA__
         }
         .toast-top-right {
             position: absolute;
-            top: 120px;
+            top: 80px;
             right: 20px;
             width: 300px;
             z-index: 9999;
@@ -215,10 +215,15 @@ __DATA__
             var toasts = document.querySelectorAll('.toast');
             var toastElements = Array.prototype.slice.call(toasts);
             var toastOptions = {
-                //autohide: true,
-                //delay: 3000
+                autohide: true,
+                delay: 3000
             };
+            // автоскрытие под контроль
             var toastInstances = toastElements.map(function(toastElement) {
+                var autohide = toastElement.getAttribute('data-autohide');
+                if (autohide === 'false') {
+                    toastOptions.autohide = false;
+                }
                 return new bootstrap.Toast(toastElement, toastOptions);
             });
 
