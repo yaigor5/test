@@ -8,4 +8,4 @@ requires 'FindBin';
 requires 'Text::ParseWords';
 requires 'DateTime::Format::MySQL';
 requires 'Data::Dump';
-requires 'Mojo::Template::SandBox';
+requires 'Mojo::Template';

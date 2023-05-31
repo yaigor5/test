@@ -192,9 +192,7 @@ __DATA__
     </div>
 
     <div class="container">
-
-
-       <div id="toastElement" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$toast_params->{autohide}) { %>data-autohide="false"<% } %>>
+       <div id="toastElement" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" >
             <div class="toast-header">
                 <strong class="me-auto" id="toastTitle"><%= $toast_params->{title} %></strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
@@ -214,6 +212,7 @@ __DATA__
                 var toastElement = document.getElementById('toastElement');
                 var toastTitle = document.getElementById('toastTitle');
                 var toastMessage = document.getElementById('toastMessage');
+                var toasthide = document.getElementById('toastMessage');
 
                 toastTitle.innerText = toastParams.title;
                 toastMessage.innerText = toastParams.message;
