@@ -35,8 +35,8 @@ get '/' => sub {
                 `created` timestamp NOT NULL,
                 `int_id` char(16) NOT NULL,
                 `str` text NOT NULL,
-                KEY `created`,
-                KEY `int_id`
+                KEY `created` (`created`),
+                KEY `int_id` (`int_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;        
         ";
         my $sth = $dbh->prepare($tmp_table);
