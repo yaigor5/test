@@ -9,6 +9,7 @@ use Mojolicious::Lite;
 use JSON;
 use Mojo::Util;
 use Encode;
+use Data::Dump qw(dump);
 #binmode STDOUT, ":utf8";
 $|=1; ## запрещаем буферизацию вывода
 
@@ -204,7 +205,7 @@ __DATA__
     <div class="container">
         <% print dump($json_params) %>
 
-        
+
         <% my $json_params_hash = Mojo::JSON::decode_json($json_params) %>
 
         <div id="toastElement" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$json_params_hash->{autohide}) { %>data-autohide="false"<% } %>>
