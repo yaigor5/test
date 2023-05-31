@@ -92,7 +92,7 @@ get '/' => sub {
         if ($lego_count>$max_elements) {
             @toast_params = [{
                 title    => 'Предупреждение',
-                message  => "Превышено количество полученных строк. Выведено ".$max_elements." строк из ".$lego_count.".",
+                text  => "Превышено количество полученных строк. Выведено ".$max_elements." строк из ".$lego_count.".",
                 type     => 'bg-warning',
                 autohide => 'false'
             }];
@@ -100,7 +100,7 @@ get '/' => sub {
         } else {
             @toast_params = [{
                 title    => 'Информация',
-                message  => "Исполнено. ".$lego_count." строк.",
+                text  => "Исполнено. ".$lego_count." строк.",
                 type     => 'bg-info',
                 autohide => 'true'
             }];
@@ -148,8 +148,10 @@ __DATA__
         }
         .toast-top-right {
             position: absolute;
-            top: 0;
-            right: 0;
+            top: 20px;
+            right: 20px;
+            width: 300px;
+            z-index: 9999;
         }
     </style>
 </head>
@@ -206,7 +208,7 @@ __DATA__
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
                     </div>
                     <div class="toast-body">
-                        <%= $message->{content} %>
+                        <%= $message->{text} %>
                     </div>
                 </div>
             <% } %>
