@@ -6,6 +6,7 @@ use lib "$RealBin/libs";
 use Lib1;
 use utf8;
 use Mojolicious::Lite;
+use Mojo::Util;
 $|=1; # запрещаем буферизацию вывода
 
 ## Инициализация
@@ -81,7 +82,7 @@ get '/' => sub {
         my @results;
         while (my $row = $sth->fetchrow_hashref) {
             # выделение искомого - TODO: доработка требуется
-            $row->{'str'} =~ s/($search_text)/<span class="highlight">$1<\/span>/gi;
+            $row->{'str'} =~ s/($search_text)/html_unescape(<span class="highlight">$1<\/span>)/gei;
             
             # занесение в стек для вывода
             push @results, $row;
