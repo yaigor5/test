@@ -100,7 +100,7 @@ get '/' => sub {
             # Преобразуем данные в UTF-8
             utf8::encode($toast_params->{title});
             utf8::encode($toast_params->{message});
-            $c->render(debug => $debug, template => 'index', results => \@results, json_params => to_json($toast_params));
+            $c->render(debug => $debug, template => 'index', results => \@results, json_params => encode_json($toast_params));
         } else {
             $toast_params = {
                 title    => 'Информация',
@@ -111,7 +111,7 @@ get '/' => sub {
             # Преобразуем данные в UTF-8
             utf8::encode($toast_params->{title});
             utf8::encode($toast_params->{message});
-            $c->render(debug => $debug, template => 'index', results => \@results, json_params => to_json($toast_params));
+            $c->render(debug => $debug, template => 'index', results => \@results, json_params => encode_json($toast_params));
         }
 
         # убираем временную таблицу
