@@ -88,10 +88,23 @@ get '/' => sub {
         # проверка условия по максимальному количеству
         my $lego_count = $dbh->selectrow_array("SELECT count(`int_id`) FROM `lego`");
 
+        my $toast_params;
         if ($lego_count>$max_elements) {
-            $c->render(debug => $debug, template => 'index', results => \@results, messages => [{ type => 'bg-warning', autohide => '0', title => 'Предупреждение', content => "Превышено количество полученных строк. Выведено ".$max_elements." строк из ".$lego_count."." }]);
+            $toast_params = {
+                title    => 'Предупреждение',
+                message  => "Превышено количество полученных строк. Выведено ".$max_elements." строк из ".$lego_count.".",
+                type     => 'warning',
+                autohide => '0'
+            };
+            $c->render(debug => $debug, template => 'index', results => \@results, toast_params => $toast_params);
         } else {
-            $c->render(debug => $debug, template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Информация', content => "Исполнено. ".$lego_count." строк." }]);
+            $toast_params = {
+                title    => 'Информация',
+                message  => "Исполнено. ".$lego_count." строк.",
+                type     => 'success',
+                autohide => '1'
+            };
+            $c->render(debug => $debug, template => 'index', results => \@results, toast_params => $toast_params);
         }
 
         # убираем временную таблицу
@@ -125,25 +138,13 @@ __DATA__
     <title>Вывод</title>
     <meta charset="utf-8">
     <link rel="icon" type="image/png" href="/img/favicon.ico">
-
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet"/>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         * { 
             font-size: 12px; 
         }
         .highlight {
             background-color: yellow;
-        }
-        .toast {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 300px;
-            z-index: 9999;
         }
     </style>
 </head>
@@ -190,23 +191,49 @@ __DATA__
         <% } %>
     </div>
 
-    <% if (stash('messages')) { %>
-        <% foreach my $message (@{stash('messages')}) { %>
-            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$message->{autohide}) { %>data-autohide="false"<% } %>>
-                <div class="toast-header <%= $message->{type} %> text-white">
-                    <strong class="me-auto"><%= $message->{title} %></strong>
-                    <small>Только что</small>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body">
-                    <%= $message->{content} %>
-                </div>
-            </div>
-        <% } %>
-    <% } %>
+    <div class="container">
 
-    <script>
-        $('.toast').toast('show');
-    </script>
+
+       <div id="toastElement" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$toast_params->{autohide}) { %>data-autohide="false"<% } %>>
+            <div class="toast-header">
+                <strong class="me-auto" id="toastTitle"><%= $toast_params->{title} %></strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+            </div>
+            <div class="toast-body" id="toastMessage">
+                <%= $toast_params->{message} %>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Получаем параметры toast из Perl-переменной
+            var toastParams = <%= to_json($toast_params) %>;
+
+            // Показываем toast при загрузке страницы
+            document.addEventListener('DOMContentLoaded', function() {
+                var toastElement = document.getElementById('toastElement');
+                var toastTitle = document.getElementById('toastTitle');
+                var toastMessage = document.getElementById('toastMessage');
+
+                toastTitle.innerText = toastParams.title;
+                toastMessage.innerText = toastParams.message;
+
+                // Добавляем класс в зависимости от типа toast
+                if (toastParams.type === 'success') {
+                    toastElement.classList.add('toast-success');
+                } else if (toastParams.type === 'warning') {
+                    toastElement.classList.add('toast-warning');
+                } else if (toastParams.type === 'error') {
+                    toastElement.classList.add('toast-error');
+                }
+
+                // Активируем toast
+                var toast = new bootstrap.Toast(toastElement);
+                toast.show();
+            });
+        </script>
+    </div>
+
+    
 </body>
 </html>
