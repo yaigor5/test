@@ -140,7 +140,7 @@ __DATA__
             background-color: yellow;
         }
         .toast-top-right {
-            position: absolute;
+            position: fixed;
             top: 80px;
             right: 20px;
             width: 300px;
@@ -195,7 +195,7 @@ __DATA__
 
         <% if (stash('messages')) { %>
             <% foreach my $message (@{stash('messages')}) { %>
-                <div class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$message->{autohide}) { %>data-autohide="false"<% } %>>
+                <div class="toast fade toast-fixed" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$message->{autohide}) { %>data-autohide="false"<% } %>>
                     <div class="toast-header <%= $message->{type} %>">
                         <strong class="me-auto"><%= $message->{title} %></strong>
                         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
