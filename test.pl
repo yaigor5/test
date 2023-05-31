@@ -92,19 +92,19 @@ get '/' => sub {
         if ($lego_count>$max_elements) {
             @toast_params = [{
                 title    => 'Предупреждение',
-                text  => "Превышено количество полученных строк. Выведено ".$max_elements." строк из ".$lego_count.".",
+                text     => "Превышено количество полученных строк. Выведено ".$max_elements." строк из ".$lego_count.".",
                 type     => 'bg-warning',
                 autohide => '0'
             }];
-            $c->render(debug => $debug, template => 'index', results => \@results, , messages => @toast_params);
+            $c->render(debug => $debug, template => 'index', results => \@results, , messages => \@toast_params);
         } else {
             @toast_params = [{
                 title    => 'Информация',
-                text  => "Исполнено. ".$lego_count." строк.",
+                text     => "Исполнено. ".$lego_count." строк.",
                 type     => 'bg-info',
                 autohide => '1'
             }];
-            $c->render(debug => $debug, template => 'index', results => \@results, messages => @toast_params);
+            $c->render(debug => $debug, template => 'index', results => \@results, messages => \@toast_params);
         }
 
         # убираем временную таблицу
