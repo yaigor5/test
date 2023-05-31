@@ -26,12 +26,12 @@ sub view_config {
     # 1. Считывание конфигурационного файла 'config.ini'.
     # 2. Получение параметров из конфигурационного файла.
 
-    my %tt;
+    my %tt = ();
     # считывание конфига
     my $config = Config::IniFiles->new(-file => 'config.ini') or die "Не удалось открыть файл config.ini: $!";
     $tt{'max'} = $config->val('html', 'max_elements');
 
-    return $tt;
+    return %tt;
 }
 
 # процедура для подключения к БД
