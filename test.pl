@@ -7,7 +7,9 @@ use Lib1;
 use utf8;
 use Mojolicious::Lite;
 use JSON;
-use Mojo::Util;
+use Mojo::Util qw(decode encode_json);
+use Encode;
+binmode STDOUT, ":utf8";
 $|=1; ## запрещаем буферизацию вывода
 
 ## Инициализация
@@ -101,7 +103,7 @@ get '/' => sub {
             # Преобразуем данные в UTF-8
             utf8::encode($toast_params->{title});
             utf8::encode($toast_params->{message});
-            $c->render(debug => $debug, template => 'index', results => \@results, json_params => encode_json($toast_params));
+            $c->render(debug => $debug, template => 'index', results => \@results, json_params => decode('UTF-8', encode_json($toast_params)));
         } else {
             $toast_params = {
                 title    => 'Информация',
@@ -112,7 +114,7 @@ get '/' => sub {
             # Преобразуем данные в UTF-8
             utf8::encode($toast_params->{title});
             utf8::encode($toast_params->{message});
-            $c->render(debug => $debug, template => 'index', results => \@results, json_params => encode_json($toast_params));
+            $c->render(debug => $debug, template => 'index', results => \@results, json_params => decode('UTF-8', encode_json($toast_params)));
         }
 
         # убираем временную таблицу
@@ -140,6 +142,7 @@ app->start;
 __DATA__
 
 @@ index.html.ep
+% encoding 'UTF-8';
 <!DOCTYPE html>
 <html>
 <head>
@@ -200,21 +203,21 @@ __DATA__
     </div>
 
     <div class="container">
-       <div id="toastElement" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$$json_params->{autohide}) { %>data-autohide="false"<% } %>>
+       <div id="toastElement" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$json_params->{autohide}) { %>data-autohide="false"<% } %>>
             <div class="toast-header">
-                <strong class="me-auto" id="toastTitle"><%= $$json_params->{title} %></strong>
+                <strong class="me-auto" id="toastTitle"><%= $json_params->{title} %></strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
             </div>
-            <div class="toast-body" id="toastMessage"><%= $$json_params->{message} %></div>
+            <div class="toast-body" id="toastMessage"><%= $json_params->{message} %></div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
         <script>
             // получаем JSON-строку с параметрами
-            var jsonParams = '<%= Mojo::Util::html_unescape($json_params) %>'.replace(/&quot;/g, '"');
+            var jsonParams = '<%= $json_params %>';
 
             // парсим JSON-строку и получаем объект с параметрами
-            var toastParams = JSON.parse(jsonParams.replace(/&quot;/g,'"'));
+            var toastParams = JSON.parse(jsonParams);
 
             // показ toast
             document.addEventListener('DOMContentLoaded', function() {
