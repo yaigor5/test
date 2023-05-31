@@ -202,12 +202,14 @@ __DATA__
     </div>
 
     <div class="container">
-       <div id="toastElement" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$json_params->{autohide}) { %>data-autohide="false"<% } %>>
+        <% my $json = Mojo::JSON->new %>
+        <% my $json_params_hash = $json->decode($json_params) %>
+        <div id="toastElement" class="toast fade" role="alert" aria-live="assertive" aria-atomic="true" data-delay="3000" <% if (!$json_params_hash->{autohide}) { %>data-autohide="false"<% } %>>
             <div class="toast-header">
-                <strong class="me-auto" id="toastTitle"><%= $json_params->{title} %></strong>
+                <strong class="me-auto" id="toastTitle"><%= $json_params_hash->{title} %></strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Закрыть"></button>
             </div>
-            <div class="toast-body" id="toastMessage"><%= $json_params->{message} %></div>
+            <div class="toast-body" id="toastMessage"><%= $json_params_hash->{message} %></div>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
