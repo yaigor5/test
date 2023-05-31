@@ -11,6 +11,7 @@ $|=1; ## запрещаем буферизацию вывода
 ## Инициализация
 my %hh = Lib1::view_config();
 my $max_elements = $hh{'max'};
+my $debug = $hh{'debug'};
 
 
 ## init DB
@@ -70,7 +71,11 @@ get '/' => sub {
         }
 
         # получение данных для вьюшки
-        $sth = $dbh->prepare("SELECT `created`,`int_id`,`str` FROM `lego` ORDER BY `int_id` DESC, `created` DESC LIMIT ".$max_elements);
+        if ($debug) {
+            $sth = $dbh->prepare("SELECT `created`,`int_id`,`str` FROM `lego` ORDER BY `int_id` DESC, `created` DESC LIMIT ".$max_elements);
+        } else {
+            $sth = $dbh->prepare("SELECT `str` FROM `lego` ORDER BY `int_id` DESC, `created` DESC LIMIT ".$max_elements);
+        }
         $sth->execute();
         my @results;
         while (my $row = $sth->fetchrow_hashref) {
@@ -84,9 +89,9 @@ get '/' => sub {
         my $lego_count = $dbh->selectrow_array("SELECT count(`int_id`) FROM `lego`");
 
         if ($lego_count>$max_elements) {
-            $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-warning', autohide => '0', title => 'Предупреждение', content => "Превышено количество результатов = ".$max_elements }]);
+            $c->render(debug => $debug, template => 'index', results => \@results, messages => [{ type => 'bg-warning', autohide => '0', title => 'Предупреждение', content => "Превышено количество результатов = ".$max_elements }]);
         } else {
-            $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Информация', content => "Исполнено" }]);
+            $c->render(debug => $debug, template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Информация', content => "Исполнено" }]);
         }
 
         # убираем временную таблицу
@@ -97,12 +102,13 @@ get '/' => sub {
         $c->render(template => 'index');
     }
 
-    # для отладки в случае ошибок - вывод на экран
-    # просмотр сгенерированного содержимого
-    my $rendered_content = $c->rendered;
-    # вывод сгенерированного содержимого
-    $c->app->log->debug($rendered_content);
-
+    if ($debug) {
+        # для отладки в случае ошибок - вывод на экран
+        # просмотр сгенерированного содержимого
+        my $rendered_content = $c->rendered;
+        # вывод сгенерированного содержимого
+        $c->app->log->debug($rendered_content);
+    }
 };
 
 
@@ -158,18 +164,22 @@ __DATA__
             <div class="row">
                 <div class="col">
                     <table class="table">
-                        <thead>
-                            <tr>
-                                <th>created</th>
-                                <th>int_id</th>
-                                <th>str</th>
-                            </tr>
-                        </thead>
+                        <% if ($debug) { %>
+                            <thead>
+                                <tr>
+                                    <th>created</th>
+                                    <th>int_id</th>
+                                    <th>str</th>
+                                </tr>
+                            </thead>
+                        <% } %>
                         <tbody>
                             <% foreach my $row (@{stash('results')}) { %>
                                 <tr>
-                                    <td><%= $row->{created} %></td>
-                                    <td><%= $row->{int_id} %></td>
+                                    <% if ($debug) { %>
+                                        <td><%= $row->{created} %></td>
+                                        <td><%= $row->{int_id} %></td>
+                                    <% } %>
                                     <td><%= $row->{str} %></td>
                                 </tr>
                             <% } %>
