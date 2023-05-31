@@ -29,9 +29,9 @@ get '/' => sub {
     my $search_text = $c->param('search_text');
 
     if ($search_text) { # введены данные для поиска
-        # создаем временную таблицу 'lego' TEMPORARY
+        # создаем временную таблицу 'lego' 
         my $tmp_table = "
-            CREATE  TABLE `lego` (
+            CREATE TEMPORARY TABLE `lego` (
                 `created` timestamp NOT NULL,
                 `int_id` char(16) NOT NULL,
                 `str` text NOT NULL,
@@ -79,12 +79,9 @@ get '/' => sub {
         }
 
         # проверка условия по максимальному количеству
-        my $count = $dbh->selectrow_array("SELECT count(`int_id`) FROM `lego`");
+        my $lego_count = $dbh->selectrow_array("SELECT count(`int_id`) FROM `lego`");
 
-
-        print $count."<br>\n"; exit; 
-
-        if ($count>$max_elements) {
+        if ($lego_count>$max_elements) {
             $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-warning', autohide => '0', title => 'Warning', content => "Превышено количество результатов = ".$max_elements }]);
         } else {
             $c->render(template => 'index', results => \@results, messages => [{ type => 'bg-info', autohide => '1', title => 'Info', content => "Исполнено" }]);
